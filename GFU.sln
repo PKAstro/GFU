@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GFU", "GFU\GFU.csproj", "{3D6A8157-225B-4482-92C8-5A6A8012A3C2}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "GFUInstall", "GFUInstall\GFUInstall.vdproj", "{7571C3F7-5177-475B-84A4-5C40603BAC92}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3D6A8157-225B-4482-92C8-5A6A8012A3C2}.Debug|x86.ActiveCfg = Debug|x86
+		{3D6A8157-225B-4482-92C8-5A6A8012A3C2}.Debug|x86.Build.0 = Debug|x86
+		{3D6A8157-225B-4482-92C8-5A6A8012A3C2}.Release|x86.ActiveCfg = Release|x86
+		{3D6A8157-225B-4482-92C8-5A6A8012A3C2}.Release|x86.Build.0 = Release|x86
+		{7571C3F7-5177-475B-84A4-5C40603BAC92}.Debug|x86.ActiveCfg = Debug
+		{7571C3F7-5177-475B-84A4-5C40603BAC92}.Release|x86.ActiveCfg = Release
+		{7571C3F7-5177-475B-84A4-5C40603BAC92}.Release|x86.Build.0 = Release
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

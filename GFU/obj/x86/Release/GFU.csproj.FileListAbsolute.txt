@@ -1,0 +1,9 @@
+D:\proj\GFU\GFU\bin\Release\GFU.exe.config
+D:\proj\GFU\GFU\bin\Release\GFU.exe
+D:\proj\GFU\GFU\bin\Release\GFU.pdb
+D:\proj\GFU\GFU\bin\Release\Ionic.Zip.dll
+D:\proj\GFU\GFU\obj\x86\Release\GFU.GFUForm.resources
+D:\proj\GFU\GFU\obj\x86\Release\GFU.Properties.Resources.resources
+D:\proj\GFU\GFU\obj\x86\Release\GFU.csproj.GenerateResource.Cache
+D:\proj\GFU\GFU\obj\x86\Release\GFU.exe
+D:\proj\GFU\GFU\obj\x86\Release\GFU.pdb
