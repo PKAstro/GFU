@@ -202,7 +202,18 @@ namespace GFU
         {
             try
             {
-                string s = GET("firmware.cgi", "");
+                string s = "";
+                try
+                {
+                    s = GET("firmware.cgi", "");
+                }
+                catch (WebException EX)
+                {
+                    // if file not found, perhaps it's just a clean SD card
+                    if (!EX.Message.Contains("404"))
+                        throw EX;
+                }
+
                 int idx = s.IndexOf("Build date:");
                 if (idx < 0)
                 {
@@ -211,6 +222,8 @@ namespace GFU
                     {
                         return false;
                     }
+                    else
+                        return true;
                 }
 
                 try
