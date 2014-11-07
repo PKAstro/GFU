@@ -33,6 +33,8 @@ namespace GFU
 
         };
 
+        string old_firmware_name = "Cur_Gem2.bin";  // pre-2012 firmware cannot be flashed if this file is in the root directory -- Tom Hilton
+
         System.Threading.Semaphore semConn = null;
 
         public GFUForm()
@@ -468,6 +470,7 @@ namespace GFU
 
                         if (res == DialogResult.Yes)
                         {
+                            DELETE(old_firmware_name, "Delete " + old_firmware_name);   // remove old firmware file (pre-2012) that causes flash to fail
 
                             string file_idx = "";
                             string idx;
@@ -929,6 +932,42 @@ namespace GFU
             return returnvalue;
         }
 
+
+        private bool DELETE(string f, string s)
+        {
+            try
+            {
+                WebRequest request = WebRequest.Create("ftp://" + txtIP.Text + "/" + f);
+                request.Method = WebRequestMethods.Ftp.DeleteFile;
+                request.Credentials = new NetworkCredential(txtUser.Text, txtPwd.Text);
+                request.Timeout = 5000;
+                using (var resp = (FtpWebResponse)request.GetResponse())
+                {
+                    Console.WriteLine(resp.StatusCode);
+                }
+
+            }
+            catch (Exception ex)
+            {
+
+                if (ex is WebException)
+                {
+                    if ((ex as WebException).Status == WebExceptionStatus.ConnectFailure)
+                    {
+                        statUpload.BackColor = Color.Red;
+                        statUpload.Text = "Failed!";
+                        progUpload.Value = 0;
+                        MessageBox.Show(this, "Failed to connect to Gemini:\n\nError: " + (ex as WebException).Message, "Cannot connect to Gemini: " + txtIP.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        bError = true;
+                        throw new Exception("Couldn't delete a file on Gemini SD card: " + f);
+                    }
+
+                }
+                return false;
+            }
+
+            return true;
+        }
         private bool Gemini_Reboot()
         {
             try

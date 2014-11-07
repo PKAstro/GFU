@@ -21,7 +21,7 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_9D40F20AA81F486512D4A25D3E81EB18"
+        "MsmKey" = "8:_81DCC214551BF03E363DEC19E7561EC1"
         "OwnerKey" = "8:_3C9581D96C1D422ABD7FD724D538B1CB"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -40,7 +40,7 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_9D40F20AA81F486512D4A25D3E81EB18"
+        "OwnerKey" = "8:_81DCC214551BF03E363DEC19E7561EC1"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -148,14 +148,14 @@
         }
         "File"
         {
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_9D40F20AA81F486512D4A25D3E81EB18"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_81DCC214551BF03E363DEC19E7561EC1"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
             "AssemblyAsmDisplayName" = "8:Ionic.Zip, Version=1.9.1.8, Culture=neutral, PublicKeyToken=edbe51ad942a3f5c, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_9D40F20AA81F486512D4A25D3E81EB18"
+                    "_81DCC214551BF03E363DEC19E7561EC1"
                     {
                     "Name" = "8:Ionic.Zip.dll"
                     "Attributes" = "3:512"
@@ -255,15 +255,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Gemini Firmware Updater"
-        "ProductCode" = "8:{54F51659-34FF-4646-996A-95B536E0FA6B}"
-        "PackageCode" = "8:{1BBA7A0D-76D9-4413-A1D3-DA16BB0DE68C}"
+        "ProductCode" = "8:{CB651D17-1EB2-4320-9C0D-D615B866DCB0}"
+        "PackageCode" = "8:{284CCCF2-F1D3-43B0-92EB-4241EB09B954}"
         "UpgradeCode" = "8:{543C4A07-DD67-4CA9-BE7A-64203A8D49F7}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:1.0.11"
+        "ProductVersion" = "8:1.0.12"
         "Manufacturer" = "8:PKAstro"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
