@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Net;
 using System.IO;
+using System.Runtime.InteropServices;
 using Ionic.Zip;
 //using EnterpriseDT.Net.Ftp;
 
@@ -34,6 +35,9 @@ namespace GFU
         };
 
         string old_firmware_name = "Cur_Gem2.bin";  // pre-2012 firmware cannot be flashed if this file is in the root directory -- Tom Hilton
+        
+        private string copy_firmware_from = "NewGem.bin"; // for some subtle upgrade issues, need to make a copy of NewGem.bin and name it HGM_Gem2.bin -- Tom Hilton
+        private string copy_firmware_to = "HGM_Gem2.bin";
 
         System.Threading.Semaphore semConn = null;
 
@@ -385,9 +389,9 @@ namespace GFU
                     } catch {}
                 }
 
-                if (!(ckHC.Checked || ckCat.Checked))
+                if (!(ckHC.Checked))
                 {
-                    Directory.Delete(path + @"\HCFirmware", true);  // user didn't want HC files
+                    Directory.Delete(path + @"\HCFirmware", true);  // user didn't want HC firmware files
                 }
 
                 if (!ckGemini.Checked)
@@ -471,6 +475,15 @@ namespace GFU
                         if (res == DialogResult.Yes)
                         {
                             DELETE(old_firmware_name, "Delete " + old_firmware_name);   // remove old firmware file (pre-2012) that causes flash to fail
+
+                            // make a copy of firmware file named HGM_Gem2.bin to make sure this is flashed in some rare upgrade cases, as per Tom Hilton
+                            // don't overwrite if 'HGM_Gem2.bin' already exists in the zip:
+
+                            bool bFrom = File.Exists(Path.Combine(path, copy_firmware_from));
+                            bool bTo = File.Exists(Path.Combine(path, copy_firmware_to));
+//                            if (!bTo && bFrom)
+//                                File.Copy(Path.Combine(path, copy_firmware_from), Path.Combine(path, copy_firmware_to));
+
 
                             string file_idx = "";
                             string idx;
