@@ -50,7 +50,7 @@ namespace GFU
 
             System.Threading.ThreadPool.SetMaxThreads(200, 200);
 
-            semConn = new System.Threading.Semaphore(8, 8);
+            semConn = new System.Threading.Semaphore(2, 2);
 
             string p = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\GFU";
 
@@ -188,7 +188,7 @@ namespace GFU
                         var file = "download " + DateTime.Now.ToString("yyyy-MM-dd") + ".zip";
                         var fileName = Path.Combine(path, file);
                         System.IO.Directory.CreateDirectory(path);
-                        using (WebClient client = new WebClient())
+                        using (MyWebClient client = new MyWebClient())
                         {
                             client.DownloadProgressChanged +=
                                 new DownloadProgressChangedEventHandler(client_DownloadProgressChanged);
@@ -405,7 +405,7 @@ namespace GFU
 
                 Application.DoEvents();
 
-                if (ckHC.Checked && ckCat.Checked)
+                if (ckCat.Checked)
                 {
                     try
                     {
@@ -418,7 +418,7 @@ namespace GFU
                             FileInfo mFile = new FileInfo(f);
                             // to remove name collusion
                             if (new FileInfo(path + "\\HCFirmware\\" + mFile.Name).Exists == false)
-                                mFile.MoveTo(path + "\\HCFirmware\\" + mFile.Name);
+                                mFile.CopyTo(path + "\\HCFirmware\\" + mFile.Name);
                         }
                     }
                     catch
@@ -426,9 +426,18 @@ namespace GFU
                     }
                 }
 
-                if (!(ckHC.Checked))
+                if (!ckHC.Checked && !ckCat.Checked)
                 {
-                    Directory.Delete(path + @"\HCFirmware", true); // user didn't want HC firmware files
+                    Directory.Delete(path + @"\HCFirmware", true); // user didn't want HC files
+                } 
+                else if (!ckHC.Checked) // delete firmware only, keep the other files (catalogs)
+                {
+                    string[] fs = Directory.GetFiles(Path.Combine(path,"Catalogs"));
+                    foreach (string s in fs)
+                    {
+                        if (s.ToLower().EndsWith(".bin"))
+                            File.Delete(s);
+                    }
                 }
 
 
@@ -493,6 +502,18 @@ namespace GFU
                         bError = true;
                         bCancel = true;
                         return false;
+                    }
+                }
+                else // delete firmware files, since flash wasn't requested
+                {
+                    string[] fs = Directory.GetFiles(path);
+                    foreach (string s in fs)
+                    {
+                        if (s.ToLower().EndsWith(".bin") && ckFlash.Checked)
+                            // don't delete .bin files if we want to do flash
+                            ;
+                        else
+                            File.Delete(s);
                     }
                 }
 
@@ -882,62 +903,51 @@ namespace GFU
 
                         System.Threading.ThreadPool.QueueUserWorkItem(arg =>
                         {
-
                             semConn.WaitOne();
 
-                            FtpWebRequest request;
 
-
-                            request = WebRequest.Create(new Uri(string.Format(@"ftp://{0}/{1}", to, fname))) as FtpWebRequest;
-                            request.Method = WebRequestMethods.Ftp.UploadFile;
-                            request.UseBinary = true;
-                            request.UsePassive = true;
-                            request.KeepAlive = false;
-                            request.Credentials = new NetworkCredential(uname, pwd);
-
-                            request.ServicePoint.ConnectionLimit = connections;
-
-                            request.ConnectionGroupName = "group";
-
-                            try
+                            using (MyWebClient webClient = new MyWebClient())
                             {
-                                using (Stream r = request.GetRequestStream())
+                                webClient.Credentials = new NetworkCredential(uname, pwd);
+              
+                                try
                                 {
-                                    using (var writer = new BinaryWriter(r))
-                                        writer.Write(File.ReadAllBytes(f));
-                                    r.Close();
+                                    webClient.UploadFile("ftp://" + to + "/" + fname, f);
+                                    while (webClient.IsBusy)
+                                        System.Threading.Thread.Sleep(100);
                                 }
-
-                                request.GetResponse();                                
-                            }
-                            catch (Exception ex)
-                            {
-                                lock (this)
-                                    this.Invoke(new Action(() =>
-                                    {
-                                        if (!bError)
+                                catch (Exception ex)
+                                {
+                                    lock (this)
+                                        this.Invoke(new Action(() =>
                                         {
-                                            bError = true;
-                                            bCancel = true;
-                                            MessageBox.Show(this, ex.Message + "\n" + fname + "\n\nDetails:\n" + ex.ToString(), "Failed to upload", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                                        }
-                                    }));                                                            
-                            }
-
-                            this.Invoke(new Action(() =>
-                            {
-                                progUpload.Value = (int)((1000 * UploadCount) / totalFiles);
-                                if (!bError)
-                                {
-                                    UploadCount++; 
-                                    lbUploadPercent.Text = (progUpload.Value / 10).ToString() + "%" + " (" + UploadCount.ToString() + "/" + totalFiles.ToString() + ")";
-                                    Application.DoEvents();
-
+                                            if (!bError)
+                                            {
+                                                bError = true;
+                                                bCancel = true;
+                                                MessageBox.Show(this,
+                                                    ex.Message + "\n" + fname + "\n\nDetails:\n" + ex.ToString(),
+                                                    "Failed to upload", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                            }
+                                        }));
                                 }
-                            }));
-                       
-                            semConn.Release();
 
+                                this.Invoke(new Action(() =>
+                                {
+                                    progUpload.Value = (int) ((1000*UploadCount)/totalFiles);
+                                    if (!bError)
+                                    {
+                                        UploadCount++;
+                                        lbUploadPercent.Text = (progUpload.Value/10).ToString() + "%" + " (" +
+                                                               UploadCount.ToString() + "/" + totalFiles.ToString() +
+                                                               ")";
+                                        Application.DoEvents();
+
+                                    }
+                                }));
+
+                            }
+                            semConn.Release();
                         });
 
 
@@ -948,6 +958,7 @@ namespace GFU
 
                 }
             }
+            return true;
 #endif
 
 
@@ -967,7 +978,6 @@ namespace GFU
                         webClient.UploadFile("ftp://" + to + "/" + fname, f);
                         while (webClient.IsBusy)
                             System.Threading.Thread.Sleep(100);
-//                        WebHeaderCollection whc = webClient.ResponseHeaders;
                     }
                     catch (Exception ex)
                     {
@@ -1178,6 +1188,16 @@ namespace GFU
                 }
                 res = MessageBox.Show(this, "SD Card Format Completed", "Format Done", MessageBoxButtons.OK,
                     MessageBoxIcon.Information);
+            }
+        }
+
+        private class MyWebClient : WebClient
+        {
+            protected override WebRequest GetWebRequest(Uri uri)
+            {
+                WebRequest w = base.GetWebRequest(uri);
+                w.Timeout =  5 * 60 * 1000;
+                return w;
             }
         }
     }

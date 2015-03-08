@@ -228,7 +228,7 @@
             // ckCat
             // 
             this.ckCat.AutoSize = true;
-            this.ckCat.Location = new System.Drawing.Point(118, 85);
+            this.ckCat.Location = new System.Drawing.Point(78, 108);
             this.ckCat.Name = "ckCat";
             this.ckCat.Size = new System.Drawing.Size(67, 17);
             this.ckCat.TabIndex = 9;
@@ -238,7 +238,7 @@
             // ckFlash
             // 
             this.ckFlash.AutoSize = true;
-            this.ckFlash.Location = new System.Drawing.Point(185, 85);
+            this.ckFlash.Location = new System.Drawing.Point(148, 85);
             this.ckFlash.Name = "ckFlash";
             this.ckFlash.Size = new System.Drawing.Size(96, 17);
             this.ckFlash.TabIndex = 8;
@@ -248,7 +248,7 @@
             // ckHC
             // 
             this.ckHC.AutoSize = true;
-            this.ckHC.Location = new System.Drawing.Point(71, 85);
+            this.ckHC.Location = new System.Drawing.Point(7, 108);
             this.ckHC.Name = "ckHC";
             this.ckHC.Size = new System.Drawing.Size(41, 17);
             this.ckHC.TabIndex = 7;
@@ -320,9 +320,9 @@
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(233, 574);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(181, 13);
+            this.label4.Size = new System.Drawing.Size(196, 13);
             this.label4.TabIndex = 16;
-            this.label4.Text = "Copyright (c) 2014 by Paul Kanevsky";
+            this.label4.Text = "Copyright (c) 2014-15 by Paul Kanevsky";
             // 
             // cbZip
             // 
@@ -386,7 +386,7 @@
             // chkVideos
             // 
             this.chkVideos.AutoSize = true;
-            this.chkVideos.Location = new System.Drawing.Point(7, 108);
+            this.chkVideos.Location = new System.Drawing.Point(78, 85);
             this.chkVideos.Name = "chkVideos";
             this.chkVideos.Size = new System.Drawing.Size(58, 17);
             this.chkVideos.TabIndex = 10;
