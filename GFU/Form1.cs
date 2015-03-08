@@ -16,30 +16,34 @@ namespace GFU
 {
     public partial class GFUForm : Form
     {
-        string CombinedFile = "";
-        int totalFiles = 0;
-        string downloadFile = "http://www.gemini-2.com/firmware1/current/combined.zip";
-        bool bCancel = false;
-        Timer tmTimer = new Timer();
-        bool bError = false;
+        private string CombinedFile = "";
+        private int totalFiles = 0;
+        private string downloadFile = "http://www.gemini-2.com/firmware1/current/combined.zip";
+        private bool bCancel = false;
+        private Timer tmTimer = new Timer();
+        private bool bError = false;
 
-        int connections = 1;
+        private int connections = 1;
 
-        string previousDateTime = "(unknown)";
+        private string previousDateTime = "(unknown)";
 
-        string[] http_links = new string[] {
+        private string[] http_links = new string[]
+        {
 
             "http://www.gemini-2.com/firmware1/current/combined.zip",
             "http://gemini-2.com/firmware1/Older/NewGem-Dec-18-2012.zip",
 
         };
 
-        string old_firmware_name = "Cur_Gem2.bin";  // pre-2012 firmware cannot be flashed if this file is in the root directory -- Tom Hilton
-        
-        private string copy_firmware_from = "NewGem.bin"; // for some subtle upgrade issues, need to make a copy of NewGem.bin and name it HGM_Gem2.bin -- Tom Hilton
+        private string old_firmware_name = "Cur_Gem2.bin";
+            // pre-2012 firmware cannot be flashed if this file is in the root directory -- Tom Hilton
+
+        private string copy_firmware_from = "NewGem.bin";
+            // for some subtle upgrade issues, need to make a copy of NewGem.bin and name it HGM_Gem2.bin -- Tom Hilton
+
         private string copy_firmware_to = "HGM_Gem2.bin";
 
-        System.Threading.Semaphore semConn = null;
+        private System.Threading.Semaphore semConn = null;
 
         public GFUForm()
         {
@@ -54,12 +58,15 @@ namespace GFU
             {
                 Directory.CreateDirectory(p);
             }
-            catch { }
+            catch
+            {
+            }
 
 
             if (!Directory.Exists(p))
             {
-                MessageBox.Show(this, "Unable to create Application Data folder: \n\n" + p, "Cannot start", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, "Unable to create Application Data folder: \n\n" + p, "Cannot start",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -72,7 +79,8 @@ namespace GFU
             }
             catch (Exception XXX)
             {
-                MessageBox.Show(this, "Exception Caught:\n" + XXX.Message + "\n\n" + XXX.ToString(), "Error",  MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, "Exception Caught:\n" + XXX.Message + "\n\n" + XXX.ToString(), "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             if (Properties.Settings.Default.IPAddress != "")
@@ -89,6 +97,7 @@ namespace GFU
                 ckGemini.Checked = true;
                 ckHC.Checked = true;
                 ckCat.Checked = false;
+                chkVideos.Checked = false;
 
                 cbZip.Sorted = true;
                 var path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\GFU";
@@ -101,7 +110,8 @@ namespace GFU
             }
             catch (Exception YYY)
             {
-                MessageBox.Show(this, "Exception Caught:\n" + YYY.Message + "\n\n" + YYY.ToString(), "Error",  MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, "Exception Caught:\n" + YYY.Message + "\n\n" + YYY.ToString(), "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             lblVer.Text = "v" + Application.ProductVersion;
@@ -110,13 +120,13 @@ namespace GFU
             tmTimer.Interval = 500;
         }
 
-        void tmTimer_Tick(object sender, EventArgs e)
+        private void tmTimer_Tick(object sender, EventArgs e)
         {
             tmTimer.Stop();
             button1_Click(this, null);
         }
 
-        void SaveSettings()
+        private void SaveSettings()
         {
             Properties.Settings.Default.IPAddress = txtIP.Text;
             Properties.Settings.Default.Password = txtPwd.Text;
@@ -129,6 +139,11 @@ namespace GFU
             SaveSettings();
             if (button1.Text == "Start")
             {
+
+//                DELETE(old_firmware_name, "Delete " + old_firmware_name);   // remove old firmware file (pre-2012) that causes flash to fail
+
+//                return;
+
                 bCancel = false;
                 button1.Enabled = false;
                 bError = false;
@@ -175,7 +190,8 @@ namespace GFU
                         System.IO.Directory.CreateDirectory(path);
                         using (WebClient client = new WebClient())
                         {
-                            client.DownloadProgressChanged += new DownloadProgressChangedEventHandler(client_DownloadProgressChanged);
+                            client.DownloadProgressChanged +=
+                                new DownloadProgressChangedEventHandler(client_DownloadProgressChanged);
                             client.DownloadFileCompleted += new AsyncCompletedEventHandler(client_DownloadFileCompleted);
                             client.DownloadFileAsync(new System.Uri(downloadFile), fileName);
                         }
@@ -184,12 +200,17 @@ namespace GFU
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show(this, "Unable to download combined.zip:\n" + ex.Message + "\n\nDetails:\n" + ex.ToString(), "Download " + downloadFile, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show(this,
+                            "Unable to download combined.zip:\n" + ex.Message + "\n\nDetails:\n" + ex.ToString(),
+                            "Download " + downloadFile, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
                 else //an older/saved version of firmware was already picked in the cb
                 {
-                    DialogResult res = MessageBox.Show(this, "Do you want to upload a prevoiusly downloaded firmware file?\n" + cbZip.Text, "Upload existing file?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
+                    DialogResult res = MessageBox.Show(this,
+                        "Do you want to upload a prevoiusly downloaded firmware file?\n" + cbZip.Text,
+                        "Upload existing file?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question,
+                        MessageBoxDefaultButton.Button1);
                     if (res == DialogResult.Yes)
                     {
                         CombinedFile = cbZip.Text;
@@ -206,6 +227,7 @@ namespace GFU
 
         private bool CheckVersion()
         {
+
             try
             {
                 string s = "";
@@ -223,18 +245,18 @@ namespace GFU
                 int idx = s.IndexOf("Build date:");
                 if (idx < 0)
                 {
-                    DialogResult res = MessageBox.Show(this, "Please note that if your current Gemini firmware version is earlier than Dec 18, 2012, you should first upgrade to Dec 18, 2012 firmware before proceeding!\n\nDo you want to continue anyway (not recommended)?", "Version check", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
-                    if (res != DialogResult.Yes)
-                    {
-                        return false;
-                    }
-                    else
-                        return true;
+                    //DialogResult res = MessageBox.Show(this, "Please note that if your current Gemini firmware version is earlier than Dec 18, 2012, you should first upgrade to Dec 18, 2012 firmware before proceeding!\n\nDo you want to continue anyway (not recommended)?", "Version check", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
+                    //if (res != DialogResult.Yes)
+                    //{
+                    //    return false;
+                    //}
+                    //else
+                    return true;
                 }
 
                 try
                 {
-                    string[] sa = (s.Substring(idx)).Split(new string[] { "<BR>" }, StringSplitOptions.RemoveEmptyEntries);
+                    string[] sa = (s.Substring(idx)).Split(new string[] {"<BR>"}, StringSplitOptions.RemoveEmptyEntries);
                     string v = "Build date:";
                     s = sa[0].Trim().Substring(v.Length);
                     s = s.Trim();
@@ -244,25 +266,25 @@ namespace GFU
                     {
                         previousDateTime = dt.ToLongDateString();
 
-                        if (dt < new DateTime(2012, 12, 17))
-                        {
+                        //if (dt < new DateTime(2012, 12, 17))
+                        //{
 
-                            DialogResult res = MessageBox.Show(this, "Your firmware version (" + previousDateTime + ") is earlier than\nDecember 18, 2012.\n\nYou should first upgrade to December 18, 2012 firmware before proceeding!\n\nDo you want to continue anyway (not recommended)?", "Version check", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Hand, MessageBoxDefaultButton.Button2);
-                            if (res != DialogResult.Yes)
-                            {
-                                return false;
-                            }
-                        }
+                        //    DialogResult res = MessageBox.Show(this, "Your firmware version (" + previousDateTime + ") is earlier than\nDecember 18, 2012.\n\nYou should first upgrade to December 18, 2012 firmware before proceeding!\n\nDo you want to continue anyway (not recommended)?", "Version check", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Hand, MessageBoxDefaultButton.Button2);
+                        //    if (res != DialogResult.Yes)
+                        //    {
+                        //        return false;
+                        //    }
+                        //}
                     }
 
                 }
                 catch (Exception ex)
                 {
-                    DialogResult res = MessageBox.Show(this, "Please note that if your firmware version is earlier than December 18, 2012, you should first upgrade to Dec 18, 2012 firmware before proceeding!\n\nDo you want to continue anyway (not recommended)?", "Version check", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
-                    if (res != DialogResult.Yes)
-                    {
-                        return false;
-                    }
+                    //DialogResult res = MessageBox.Show(this, "Please note that if your firmware version is earlier than December 18, 2012, you should first upgrade to Dec 18, 2012 firmware before proceeding!\n\nDo you want to continue anyway (not recommended)?", "Version check", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
+                    //if (res != DialogResult.Yes)
+                    //{
+                    //    return false;
+                    //}
                 }
                 return true;
             }
@@ -272,15 +294,18 @@ namespace GFU
                 statUpload.BackColor = Color.Red;
                 statUpload.Text = "Failed!";
                 progUpload.Value = 0;
-                MessageBox.Show(this, "Failed to connect to Gemini. Please check that it's connected, turned ON, and at the correct IP address.\n\nError: " + (ex as WebException).Message, "Cannot connect to Gemini: " + txtIP.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this,
+                    "Failed to connect to Gemini. Please check that it's connected, turned ON, and at the correct IP address.\n\nError: " +
+                    (ex as WebException).Message, "Cannot connect to Gemini: " + txtIP.Text, MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
                 bError = true;
                 return false;
             }
 
-         
+
         }
 
-        void client_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
+        private void client_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
         {
             if (e.Error != null)
             {
@@ -291,13 +316,15 @@ namespace GFU
                 button1.Enabled = true;
                 bCancel = true;
 
-                MessageBox.Show(this, "Download failed to complete:\n\n" + e.Error.Message + "\n\nDetails:\n" + e.Error.ToString(), "Cannot download Combined.zip", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this,
+                    "Download failed to complete:\n\n" + e.Error.Message + "\n\nDetails:\n" + e.Error.ToString(),
+                    "Cannot download Combined.zip", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 bError = true;
 
                 return;
             }
             progDownload.Value = 1000;
-            lbDownloadPercent.Text = (progDownload.Value / 10).ToString() + "%";
+            lbDownloadPercent.Text = (progDownload.Value/10).ToString() + "%";
             statDownload.Text = "Done!";
             statDownload.BackColor = Color.Green;
             lbDownload.BackColor = Color.Green;
@@ -307,10 +334,10 @@ namespace GFU
             button1.Text = "Start";
             button1.Enabled = true;
             bCancel = true;
-        
+
         }
 
-        string MyDir
+        private string MyDir
         {
             get
             {
@@ -321,18 +348,20 @@ namespace GFU
             }
         }
 
-        void client_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
+        private void client_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
         {
             try
             {
-                progDownload.Value = (int)((1000 * e.BytesReceived) / e.TotalBytesToReceive);
-                lbDownloadPercent.Text = (progDownload.Value / 10).ToString() + "%";
+                progDownload.Value = (int) ((1000*e.BytesReceived)/e.TotalBytesToReceive);
+                lbDownloadPercent.Text = (progDownload.Value/10).ToString() + "%";
             }
-            catch { }
+            catch
+            {
+            }
             progDownload.Update();
-            Application.DoEvents();          
+            Application.DoEvents();
         }
-     
+
         private bool Decompress(string file)
         {
             string path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\GFU\\Upload";
@@ -340,14 +369,18 @@ namespace GFU
             {
                 System.IO.Directory.Delete(path, true); //delete old contents
             }
-            catch { }
+            catch
+            {
+            }
 
 
             try
             {
                 System.IO.Directory.CreateDirectory(path);
             }
-            catch { }
+            catch
+            {
+            }
 
             lbDecompress.BackColor = Color.Yellow;
             progDecompress.Minimum = 0;
@@ -377,7 +410,8 @@ namespace GFU
                     try
                     {
 
-                        List<String> Catalogs = Directory.GetFiles(path + "\\Catalogs", "*.*", SearchOption.AllDirectories).ToList();
+                        List<String> Catalogs =
+                            Directory.GetFiles(path + "\\Catalogs", "*.*", SearchOption.AllDirectories).ToList();
 
                         foreach (string f in Catalogs)
                         {
@@ -386,12 +420,27 @@ namespace GFU
                             if (new FileInfo(path + "\\HCFirmware\\" + mFile.Name).Exists == false)
                                 mFile.MoveTo(path + "\\HCFirmware\\" + mFile.Name);
                         }
-                    } catch {}
+                    }
+                    catch
+                    {
+                    }
                 }
 
                 if (!(ckHC.Checked))
                 {
-                    Directory.Delete(path + @"\HCFirmware", true);  // user didn't want HC firmware files
+                    Directory.Delete(path + @"\HCFirmware", true); // user didn't want HC firmware files
+                }
+
+
+                if (!chkVideos.Checked)
+                {
+                    try
+                    {
+                        Directory.Delete(Path.Combine(path, "Video"), true);
+                    }
+                    catch
+                    {
+                    }
                 }
 
                 if (!ckGemini.Checked)
@@ -402,15 +451,22 @@ namespace GFU
                     foreach (string s in Dirs)
                     {
                         if (s.EndsWith("HCFirmware", StringComparison.CurrentCultureIgnoreCase)) continue;
+                        if (s.EndsWith("Catalogs", StringComparison.CurrentCultureIgnoreCase) && ckCat.Checked)
+                            continue;
+
+                        if (s.EndsWith("Video", StringComparison.CurrentCultureIgnoreCase) && chkVideos.Checked)
+                            continue;
+
                         Directory.Delete(s, true);
                     }
 
                     string[] fs = Directory.GetFiles(path);
                     foreach (string s in fs)
                     {
-                        if (s.ToLower().EndsWith(".bin") && ckFlash.Checked) // don't delete .bin files if we want to do flash
+                        if (s.ToLower().EndsWith(".bin") && ckFlash.Checked)
+                            // don't delete .bin files if we want to do flash
                             ;
-                        else 
+                        else
                             File.Delete(s);
                     }
                 }
@@ -419,20 +475,31 @@ namespace GFU
 
                 if (ckFlash.Checked)
                 {
-                        try { Directory.CreateDirectory(path + "\\EN"); }
-                        catch { }
-                        try {File.Copy(Path.Combine(MyDir, "gfu.cgi"), path + "\\EN\\" + "gfu.cgi");} 
-                        catch (Exception ex)  {
-                            MessageBox.Show(this, "Cannot copy GFU.CGI file!\n\n" + ex.ToString(), "Copy failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            bError = true;
-                            bCancel = true;
-                            return false;
-                        }
+                    try
+                    {
+                        Directory.CreateDirectory(path + "\\EN");
+                    }
+                    catch
+                    {
+                    }
+                    try
+                    {
+                        File.Copy(Path.Combine(MyDir, "gfu.cgi"), path + "\\EN\\" + "gfu.cgi");
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(this, "Cannot copy GFU.CGI file!\n\n" + ex.ToString(), "Copy failed",
+                            MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        bError = true;
+                        bCancel = true;
+                        return false;
+                    }
                 }
 
-                if (!ckFlash.Checked && !ckGemini.Checked && !ckHC.Checked && !ckCat.Checked)
+                if (!ckFlash.Checked && !ckGemini.Checked && !ckHC.Checked && !ckCat.Checked && !chkVideos.Checked)
                 {
-                    MessageBox.Show(this, "No upload/flash option is selected", "Nothing to do", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    MessageBox.Show(this, "No upload/flash option is selected", "Nothing to do", MessageBoxButtons.OK,
+                        MessageBoxIcon.Exclamation);
 
                     return true;
                 }
@@ -462,19 +529,22 @@ namespace GFU
 
                     if (files.Count() > 0)
                     {
-                        Gemini_Reboot();    //reboot just in case
+                        Gemini_Reboot(); //reboot just in case
 
                         string ff = files[0];
                         DateTime dt = File.GetCreationTime(ff);
                         string fn = Path.GetFileName(ff);
 
                         DialogResult res = MessageBox.Show(this,
-                            "Upload Completed!\n\nDo you want to flash firmware file " + fn + " dated " + dt.ToShortDateString() + "?", "File update completed", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                            "Upload Completed!\n\nDo you want to flash firmware file " + fn + " dated " +
+                            dt.ToShortDateString() + "?", "File update completed", MessageBoxButtons.YesNoCancel,
+                            MessageBoxIcon.Question);
 
 
                         if (res == DialogResult.Yes)
                         {
-                            DELETE(old_firmware_name, "Delete " + old_firmware_name);   // remove old firmware file (pre-2012) that causes flash to fail
+                            DELETE(old_firmware_name, "Delete " + old_firmware_name);
+                                // remove old firmware file (pre-2012) that causes flash to fail
 
                             // make a copy of firmware file named HGM_Gem2.bin to make sure this is flashed in some rare upgrade cases, as per Tom Hilton
                             // don't overwrite if 'HGM_Gem2.bin' already exists in the zip:
@@ -494,18 +564,21 @@ namespace GFU
                             }
                             catch (Exception ex)
                             {
-                                MessageBox.Show(this, "Failed to get firmware listing from Gemini!\n\nGET(gfu.cgi)\n" + ex.ToString(), "Flash Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                MessageBox.Show(this,
+                                    "Failed to get firmware listing from Gemini!\n\nGET(gfu.cgi)\n" + ex.ToString(),
+                                    "Flash Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
                                 bError = true;
                                 return false;
 
                             }
 
-                            string[] firm = idx.Split(new string[] { "</option>" }, StringSplitOptions.RemoveEmptyEntries);
+                            string[] firm = idx.Split(new string[] {"</option>"}, StringSplitOptions.RemoveEmptyEntries);
                             foreach (string s in firm)
                             {
                                 if (s.EndsWith(fn, StringComparison.CurrentCultureIgnoreCase))
                                 {
-                                    string[] v = s.Split(new string[] { "=", "<", ">" }, StringSplitOptions.RemoveEmptyEntries);
+                                    string[] v = s.Split(new string[] {"=", "<", ">"},
+                                        StringSplitOptions.RemoveEmptyEntries);
                                     file_idx = v[1];
                                     break;
                                 }
@@ -513,7 +586,9 @@ namespace GFU
 
                             if (file_idx == "")
                             {
-                                MessageBox.Show(this, "Did not find firmware on SD card! Something didn't go right, nothing was flashed.", "Failed to find firmware bin file", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+                                MessageBox.Show(this,
+                                    "Did not find firmware on SD card! Something didn't go right, nothing was flashed.",
+                                    "Failed to find firmware bin file", MessageBoxButtons.OK, MessageBoxIcon.Hand);
                                 bError = false;
                                 return false;
                             }
@@ -526,7 +601,7 @@ namespace GFU
 
                             try
                             {
-                                Gemini_Save_Settings(); 
+                                Gemini_Save_Settings();
                             }
                             catch (Exception ex1)
                             {
@@ -539,7 +614,8 @@ namespace GFU
                             catch (Exception ex1)
                             {
 
-                                MessageBox.Show(this, "Flash didn't complete." + ex1.Message, "Failed to flash", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                MessageBox.Show(this, "Flash didn't complete." + ex1.Message, "Failed to flash",
+                                    MessageBoxButtons.OK, MessageBoxIcon.Error);
                                 bError = true;
                                 return false;
                             }
@@ -556,7 +632,8 @@ namespace GFU
                             }
                             catch (Exception ex2)
                             {
-                                MessageBox.Show(this, "SRAM Reset didn't complete." + ex2.Message, "Failed to reset SRAM", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                MessageBox.Show(this, "SRAM Reset didn't complete." + ex2.Message,
+                                    "Failed to reset SRAM", MessageBoxButtons.OK, MessageBoxIcon.Error);
                                 bError = true;
                                 return false;
                             }
@@ -584,7 +661,8 @@ namespace GFU
                             }
                             catch (Exception ex3)
                             {
-                                MessageBox.Show(this, "Reboot didn't complete." + ex3.Message, "Failed to reboot", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                MessageBox.Show(this, "Reboot didn't complete." + ex3.Message, "Failed to reboot",
+                                    MessageBoxButtons.OK, MessageBoxIcon.Error);
                                 bError = true;
                                 return false;
                             }
@@ -592,7 +670,9 @@ namespace GFU
                             lbReboot.Text = "Done!";
                             lbReboot.Update();
                             Application.DoEvents();
-                            MessageBox.Show(this, "Flashing completed!\n\nPlease turn off and on your Gemini to complete the process.", "All Done!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            MessageBox.Show(this,
+                                "Flashing completed!\n\nPlease turn off and on your Gemini to complete the process.",
+                                "All Done!", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }
                     }
                 }
@@ -601,7 +681,8 @@ namespace GFU
             }
             catch (Exception ex)
             {
-                MessageBox.Show(this, "Error" +"\n\n"  +ex.Message + "\n\nDetails:\n" + ex.ToString(), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, "Error" + "\n\n" + ex.Message + "\n\nDetails:\n" + ex.ToString(), "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             return false;
 
@@ -613,7 +694,9 @@ namespace GFU
             {
                 GET("firmware.cgi", "CS=Store+SRAM");
             }
-            catch { }
+            catch
+            {
+            }
 
             return WaitForGemini("Save Settings");
         }
@@ -624,25 +707,29 @@ namespace GFU
             {
                 GET("firmware.cgi", "CR=Load+SRAM");
             }
-            catch { }
+            catch
+            {
+            }
 
             return WaitForGemini("Save Settings");
         }
 
 
 
-        void zip1_ExtractProgress(object sender, ExtractProgressEventArgs e)
+        private void zip1_ExtractProgress(object sender, ExtractProgressEventArgs e)
         {
             if (e.EntriesExtracted > 0)
             {
                 if (bCancel) e.Cancel = true;
                 try
                 {
-                    progDecompress.Value = (int)((1000 * e.EntriesExtracted) / e.EntriesTotal);
+                    progDecompress.Value = (int) ((1000*e.EntriesExtracted)/e.EntriesTotal);
                     totalFiles = e.EntriesTotal;
-                    lbDecompressPercent.Text = (progDecompress.Value / 10).ToString() + "%";
+                    lbDecompressPercent.Text = (progDecompress.Value/10).ToString() + "%";
                 }
-                catch { }
+                catch
+                {
+                }
                 Application.DoEvents();
             }
             if (e.EventType == ZipProgressEventType.Error_Saving)
@@ -651,14 +738,15 @@ namespace GFU
                 progDecompress.Value = 0;
                 statDecompress.BackColor = Color.Red;
                 statDecompress.Text = "Failed!";
-                MessageBox.Show("Failed to decompress", "Failed to decompress archive\n\n" +e.ArchiveName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Failed to decompress", "Failed to decompress archive\n\n" + e.ArchiveName,
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
         }
 
-        int UploadCount = 0;
+        private int UploadCount = 0;
 
-        bool ftpAll(string fromPath, string to, string uname, string pwd)
+        private bool ftpAll(string fromPath, string to, string uname, string pwd)
         {
             if (bError) return false;
 
@@ -676,7 +764,7 @@ namespace GFU
                     request.Method = WebRequestMethods.Ftp.MakeDirectory;
                     request.Credentials = new NetworkCredential(uname, pwd);
                     request.Timeout = 5000;
-                    using (var resp = (FtpWebResponse)request.GetResponse())
+                    using (var resp = (FtpWebResponse) request.GetResponse())
                     {
                         Console.WriteLine(resp.StatusCode);
                     }
@@ -692,7 +780,9 @@ namespace GFU
                             statUpload.BackColor = Color.Red;
                             statUpload.Text = "Failed!";
                             progUpload.Value = 0;
-                            MessageBox.Show(this, "Failed to connect to Gemini:\n\nError: " + (ex as WebException).Message, "Cannot connect to Gemini: " + txtIP.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            MessageBox.Show(this,
+                                "Failed to connect to Gemini:\n\nError: " + (ex as WebException).Message,
+                                "Cannot connect to Gemini: " + txtIP.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                             bError = true;
                             throw new Exception("Couldn't upload files to Gemini");
                         }
@@ -864,7 +954,7 @@ namespace GFU
             using (WebClient webClient = new WebClient())
             {
                 webClient.Credentials = new NetworkCredential(uname, pwd);
-                
+
                 string[] files2 = Directory.GetFiles(fromPath);
                 foreach (string f in files2)
                 {
@@ -873,7 +963,7 @@ namespace GFU
 
                     string fname = Path.GetFileName(f);
                     try
-                    {                        
+                    {
                         webClient.UploadFile("ftp://" + to + "/" + fname, f);
                         while (webClient.IsBusy)
                             System.Threading.Thread.Sleep(100);
@@ -881,16 +971,20 @@ namespace GFU
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show(this, ex.Message + "\n\n" + to + "/" + fname + "\n\nDetails:\n" + ex.ToString(), "Failed to FTP file", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show(this, ex.Message + "\n\n" + to + "/" + fname + "\n\nDetails:\n" + ex.ToString(),
+                            "Failed to FTP file", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         bError = true;
                         break;
                     }
                     try
-                    {                      
-                        progUpload.Value = (int)((1000 * UploadCount) / totalFiles);
-                        lbUploadPercent.Text = (progUpload.Value / 10).ToString() + "%" + " (" + UploadCount.ToString() + "/" + totalFiles.ToString() + ")";
+                    {
+                        progUpload.Value = (int) ((1000*UploadCount)/totalFiles);
+                        lbUploadPercent.Text = (progUpload.Value/10).ToString() + "%" + " (" + UploadCount.ToString() +
+                                               "/" + totalFiles.ToString() + ")";
                     }
-                    catch { }
+                    catch
+                    {
+                    }
                     Application.DoEvents();
                     UploadCount++;
                 }
@@ -914,14 +1008,37 @@ namespace GFU
             {
                 System.IO.Directory.Delete(path, true); //delete old contents
             }
-            catch { }
+            catch
+            {
+            }
 
         }
 
 
+        private bool POST(string f, string s)
+        {
+            WebRequest req = WebRequest.Create("http://" + txtIP.Text + "/en/" + f);
+            req.Credentials = new NetworkCredential(txtUser.Text, txtPwd.Text);
+            req.Timeout = 10000; // don't worry about the timeout here
+            req.Method = "POST";
+
+            string postData = s;
+            byte[] byteArray = Encoding.UTF8.GetBytes(postData);
+            req.ContentType = "application/x-www-form-urlencoded";
+            req.ContentLength = byteArray.Length;
+            Stream dataStream = req.GetRequestStream();
+            dataStream.Write(byteArray, 0, byteArray.Length);
+            dataStream.Close();
+
+            WebResponse res = req.GetResponse();
+            StreamReader sr = new StreamReader(res.GetResponseStream());
+            string returnvalue = sr.ReadToEnd();
+            return true;
+        }
+
         private bool Submit(string f, string s)
         {
-            WebRequest req = WebRequest.Create("http://" + txtIP.Text + "/en/"+f+"?"+s);
+            WebRequest req = WebRequest.Create("http://" + txtIP.Text + "/en/" + f + "?" + s);
             req.Credentials = new NetworkCredential(txtUser.Text, txtPwd.Text);
             req.Timeout = 1000; // don't worry about the timeout here
 
@@ -929,7 +1046,7 @@ namespace GFU
             WebResponse res = req.GetResponse();
             StreamReader sr = new StreamReader(res.GetResponseStream());
             string returnvalue = sr.ReadToEnd();
-            return true;        
+            return true;
         }
 
         private string GET(string f, string s)
@@ -948,46 +1065,59 @@ namespace GFU
 
         private bool DELETE(string f, string s)
         {
-            try
-            {
-                WebRequest request = WebRequest.Create("ftp://" + txtIP.Text + "/" + f);
-                request.Method = WebRequestMethods.Ftp.DeleteFile;
-                request.Credentials = new NetworkCredential(txtUser.Text, txtPwd.Text);
-                request.Timeout = 5000;
-                using (var resp = (FtpWebResponse)request.GetResponse())
+            // turns out delete doesn't work the first time on 2012 firmware. Need to try it again
+            // and then it works
+            for (int i = 0; i < 3; ++i)
+                try
                 {
-                    Console.WriteLine(resp.StatusCode);
-                }
-
-            }
-            catch (Exception ex)
-            {
-
-                if (ex is WebException)
-                {
-                    if ((ex as WebException).Status == WebExceptionStatus.ConnectFailure)
+                    WebRequest request = WebRequest.Create("ftp://" + txtIP.Text + "/" + f);
+                    request.Method = WebRequestMethods.Ftp.DeleteFile;
+                    request.Credentials = new NetworkCredential(txtUser.Text, txtPwd.Text);
+                    request.Timeout = 5000;
+                    using (var resp = (FtpWebResponse) request.GetResponse())
                     {
-                        statUpload.BackColor = Color.Red;
-                        statUpload.Text = "Failed!";
-                        progUpload.Value = 0;
-                        MessageBox.Show(this, "Failed to connect to Gemini:\n\nError: " + (ex as WebException).Message, "Cannot connect to Gemini: " + txtIP.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        bError = true;
-                        throw new Exception("Couldn't delete a file on Gemini SD card: " + f);
+                        Console.WriteLine(resp.StatusCode);
                     }
+                    return true;
 
                 }
-                return false;
-            }
+                catch (Exception ex)
+                {
+                    if (i < 2)
+                    {
+                        System.Threading.Thread.Sleep(500); //retry
+                        continue;
+                    }
+                    if (ex is WebException)
+                    {
+                        if ((ex as WebException).Status == WebExceptionStatus.ConnectFailure)
+                        {
+                            statUpload.BackColor = Color.Red;
+                            statUpload.Text = "Failed!";
+                            progUpload.Value = 0;
+                            MessageBox.Show(this,
+                                "Failed to connect to Gemini:\n\nError: " + (ex as WebException).Message,
+                                "Cannot connect to Gemini: " + txtIP.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            bError = true;
+                            throw new Exception("Couldn't delete a file on Gemini SD card: " + f);
+                        }
+
+                    }
+                    return false;
+                }
 
             return true;
         }
+
         private bool Gemini_Reboot()
         {
             try
             {
                 Submit("firmware.cgi", "bC=Cold Reboot");
             }
-            catch { }
+            catch
+            {
+            }
             return WaitForGemini("Reboot");
 
         }
@@ -998,7 +1128,9 @@ namespace GFU
             {
                 Submit("firmware.cgi", "CL=RESET SRAM");
             }
-            catch { }
+            catch
+            {
+            }
             return WaitForGemini("SRAM Reset");
         }
 
@@ -1008,11 +1140,13 @@ namespace GFU
             {
                 Submit("index.cgi", "ff=" + fname);
             }
-            catch { }
+            catch
+            {
+            }
             return WaitForGemini("Flash Firmware");
         }
 
-        bool WaitForGemini(string msg)
+        private bool WaitForGemini(string msg)
         {
             try
             {
@@ -1021,10 +1155,31 @@ namespace GFU
             }
             catch (Exception ex)
             {
-                MessageBox.Show(this, "Timeout occurred while waiting for Gemini to " + msg + "\n\nDetails:\n" + ex.ToString(), "Failed to " + msg, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this,
+                    "Timeout occurred while waiting for Gemini to " + msg + "\n\nDetails:\n" + ex.ToString(),
+                    "Failed to " + msg, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
         }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            DialogResult res = MessageBox.Show(this,
+                "ARE YOU SURE YOU WANT TO FORMAT GEMINI SD CARD?\r\n\r\nAll data on the card will be erased and will need to be re-uploaded",
+                "Format Warning!", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
+            if (res == DialogResult.Yes)
+            {
+                try
+                {
+                    POST("firmware.cgi", "format=yes&label=GeminiSD");
+                }
+                catch
+                {
+                }
+                res = MessageBox.Show(this, "SD Card Format Completed", "Format Done", MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+            }
+        }
     }
- 
+
 }

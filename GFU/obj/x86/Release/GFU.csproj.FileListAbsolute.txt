@@ -7,3 +7,13 @@ D:\proj\GFU\GFU\obj\x86\Release\GFU.Properties.Resources.resources
 D:\proj\GFU\GFU\obj\x86\Release\GFU.csproj.GenerateResource.Cache
 D:\proj\GFU\GFU\obj\x86\Release\GFU.exe
 D:\proj\GFU\GFU\obj\x86\Release\GFU.pdb
+C:\proj\GFU\GFU\bin\Release\GFU.exe.config
+C:\proj\GFU\GFU\bin\Release\GFU.exe
+C:\proj\GFU\GFU\bin\Release\GFU.pdb
+C:\proj\GFU\GFU\bin\Release\Ionic.Zip.dll
+C:\proj\GFU\GFU\obj\x86\Release\GFU.GFUForm.resources
+C:\proj\GFU\GFU\obj\x86\Release\GFU.Properties.Resources.resources
+C:\proj\GFU\GFU\obj\x86\Release\GFU.csproj.GenerateResource.Cache
+C:\proj\GFU\GFU\obj\x86\Release\GFU.exe
+C:\proj\GFU\GFU\obj\x86\Release\GFU.pdb
+C:\proj\GFU\GFU\obj\x86\Release\GFU.csprojResolveAssemblyReference.cache

@@ -44,6 +44,7 @@
             this.lbUpload = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.ckCat = new System.Windows.Forms.CheckBox();
             this.ckFlash = new System.Windows.Forms.CheckBox();
             this.ckHC = new System.Windows.Forms.CheckBox();
             this.ckGemini = new System.Windows.Forms.CheckBox();
@@ -59,7 +60,8 @@
             this.lbFlash = new System.Windows.Forms.Label();
             this.lbSRAM = new System.Windows.Forms.Label();
             this.lblVer = new System.Windows.Forms.Label();
-            this.ckCat = new System.Windows.Forms.CheckBox();
+            this.button2 = new System.Windows.Forms.Button();
+            this.chkVideos = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -81,7 +83,7 @@
             // 
             this.lbDownload.BackColor = System.Drawing.SystemColors.InactiveCaption;
             this.lbDownload.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbDownload.Location = new System.Drawing.Point(20, 126);
+            this.lbDownload.Location = new System.Drawing.Point(20, 152);
             this.lbDownload.Name = "lbDownload";
             this.lbDownload.Size = new System.Drawing.Size(145, 88);
             this.lbDownload.TabIndex = 2;
@@ -90,7 +92,7 @@
             // 
             // progDownload
             // 
-            this.progDownload.Location = new System.Drawing.Point(171, 157);
+            this.progDownload.Location = new System.Drawing.Point(171, 183);
             this.progDownload.Maximum = 1000;
             this.progDownload.Name = "progDownload";
             this.progDownload.Size = new System.Drawing.Size(303, 23);
@@ -101,7 +103,7 @@
             // 
             this.statDownload.BackColor = System.Drawing.SystemColors.InactiveCaption;
             this.statDownload.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.statDownload.Location = new System.Drawing.Point(480, 126);
+            this.statDownload.Location = new System.Drawing.Point(480, 152);
             this.statDownload.Name = "statDownload";
             this.statDownload.Size = new System.Drawing.Size(145, 88);
             this.statDownload.TabIndex = 4;
@@ -111,7 +113,7 @@
             // 
             this.statDecompress.BackColor = System.Drawing.SystemColors.InactiveCaption;
             this.statDecompress.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.statDecompress.Location = new System.Drawing.Point(480, 231);
+            this.statDecompress.Location = new System.Drawing.Point(480, 257);
             this.statDecompress.Name = "statDecompress";
             this.statDecompress.Size = new System.Drawing.Size(145, 88);
             this.statDecompress.TabIndex = 7;
@@ -119,7 +121,7 @@
             // 
             // progDecompress
             // 
-            this.progDecompress.Location = new System.Drawing.Point(171, 262);
+            this.progDecompress.Location = new System.Drawing.Point(171, 288);
             this.progDecompress.Maximum = 1000;
             this.progDecompress.Name = "progDecompress";
             this.progDecompress.Size = new System.Drawing.Size(303, 23);
@@ -130,7 +132,7 @@
             // 
             this.lbDecompress.BackColor = System.Drawing.SystemColors.InactiveCaption;
             this.lbDecompress.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbDecompress.Location = new System.Drawing.Point(20, 231);
+            this.lbDecompress.Location = new System.Drawing.Point(20, 257);
             this.lbDecompress.Name = "lbDecompress";
             this.lbDecompress.Size = new System.Drawing.Size(145, 88);
             this.lbDecompress.TabIndex = 5;
@@ -140,7 +142,7 @@
             // lbDownloadPercent
             // 
             this.lbDownloadPercent.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbDownloadPercent.Location = new System.Drawing.Point(267, 131);
+            this.lbDownloadPercent.Location = new System.Drawing.Point(267, 157);
             this.lbDownloadPercent.Name = "lbDownloadPercent";
             this.lbDownloadPercent.Size = new System.Drawing.Size(100, 23);
             this.lbDownloadPercent.TabIndex = 8;
@@ -149,7 +151,7 @@
             // lbDecompressPercent
             // 
             this.lbDecompressPercent.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbDecompressPercent.Location = new System.Drawing.Point(267, 236);
+            this.lbDecompressPercent.Location = new System.Drawing.Point(267, 262);
             this.lbDecompressPercent.Name = "lbDecompressPercent";
             this.lbDecompressPercent.Size = new System.Drawing.Size(100, 23);
             this.lbDecompressPercent.TabIndex = 9;
@@ -158,7 +160,7 @@
             // lbUploadPercent
             // 
             this.lbUploadPercent.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbUploadPercent.Location = new System.Drawing.Point(221, 339);
+            this.lbUploadPercent.Location = new System.Drawing.Point(221, 365);
             this.lbUploadPercent.Name = "lbUploadPercent";
             this.lbUploadPercent.Size = new System.Drawing.Size(210, 23);
             this.lbUploadPercent.TabIndex = 13;
@@ -168,7 +170,7 @@
             // 
             this.statUpload.BackColor = System.Drawing.SystemColors.InactiveCaption;
             this.statUpload.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.statUpload.Location = new System.Drawing.Point(480, 334);
+            this.statUpload.Location = new System.Drawing.Point(480, 360);
             this.statUpload.Name = "statUpload";
             this.statUpload.Size = new System.Drawing.Size(145, 88);
             this.statUpload.TabIndex = 12;
@@ -176,7 +178,7 @@
             // 
             // progUpload
             // 
-            this.progUpload.Location = new System.Drawing.Point(171, 365);
+            this.progUpload.Location = new System.Drawing.Point(171, 391);
             this.progUpload.Maximum = 1000;
             this.progUpload.Name = "progUpload";
             this.progUpload.Size = new System.Drawing.Size(303, 23);
@@ -187,7 +189,7 @@
             // 
             this.lbUpload.BackColor = System.Drawing.SystemColors.InactiveCaption;
             this.lbUpload.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbUpload.Location = new System.Drawing.Point(20, 334);
+            this.lbUpload.Location = new System.Drawing.Point(20, 360);
             this.lbUpload.Name = "lbUpload";
             this.lbUpload.Size = new System.Drawing.Size(145, 88);
             this.lbUpload.TabIndex = 10;
@@ -207,6 +209,7 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.chkVideos);
             this.panel1.Controls.Add(this.ckCat);
             this.panel1.Controls.Add(this.ckFlash);
             this.panel1.Controls.Add(this.ckHC);
@@ -219,8 +222,18 @@
             this.panel1.Controls.Add(this.label1);
             this.panel1.Location = new System.Drawing.Point(187, 12);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(284, 105);
+            this.panel1.Size = new System.Drawing.Size(284, 132);
             this.panel1.TabIndex = 15;
+            // 
+            // ckCat
+            // 
+            this.ckCat.AutoSize = true;
+            this.ckCat.Location = new System.Drawing.Point(118, 85);
+            this.ckCat.Name = "ckCat";
+            this.ckCat.Size = new System.Drawing.Size(67, 17);
+            this.ckCat.TabIndex = 9;
+            this.ckCat.Text = "Catalogs";
+            this.ckCat.UseVisualStyleBackColor = true;
             // 
             // ckFlash
             // 
@@ -305,7 +318,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(233, 548);
+            this.label4.Location = new System.Drawing.Point(233, 574);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(181, 13);
             this.label4.TabIndex = 16;
@@ -314,7 +327,7 @@
             // cbZip
             // 
             this.cbZip.FormattingEnabled = true;
-            this.cbZip.Location = new System.Drawing.Point(175, 193);
+            this.cbZip.Location = new System.Drawing.Point(175, 219);
             this.cbZip.Name = "cbZip";
             this.cbZip.Size = new System.Drawing.Size(299, 21);
             this.cbZip.TabIndex = 17;
@@ -323,7 +336,7 @@
             // 
             this.lbReboot.BackColor = System.Drawing.SystemColors.InactiveCaption;
             this.lbReboot.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbReboot.Location = new System.Drawing.Point(480, 437);
+            this.lbReboot.Location = new System.Drawing.Point(480, 463);
             this.lbReboot.Name = "lbReboot";
             this.lbReboot.Size = new System.Drawing.Size(145, 88);
             this.lbReboot.TabIndex = 20;
@@ -334,7 +347,7 @@
             // 
             this.lbFlash.BackColor = System.Drawing.SystemColors.InactiveCaption;
             this.lbFlash.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbFlash.Location = new System.Drawing.Point(20, 437);
+            this.lbFlash.Location = new System.Drawing.Point(20, 463);
             this.lbFlash.Name = "lbFlash";
             this.lbFlash.Size = new System.Drawing.Size(145, 88);
             this.lbFlash.TabIndex = 18;
@@ -345,7 +358,7 @@
             // 
             this.lbSRAM.BackColor = System.Drawing.SystemColors.InactiveCaption;
             this.lbSRAM.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbSRAM.Location = new System.Drawing.Point(251, 437);
+            this.lbSRAM.Location = new System.Drawing.Point(251, 463);
             this.lbSRAM.Name = "lbSRAM";
             this.lbSRAM.Size = new System.Drawing.Size(145, 88);
             this.lbSRAM.TabIndex = 21;
@@ -354,27 +367,38 @@
             // 
             // lblVer
             // 
-            this.lblVer.Location = new System.Drawing.Point(485, 548);
+            this.lblVer.Location = new System.Drawing.Point(485, 574);
             this.lblVer.Name = "lblVer";
             this.lblVer.Size = new System.Drawing.Size(140, 23);
             this.lblVer.TabIndex = 22;
             this.lblVer.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
-            // ckCat
+            // button2
             // 
-            this.ckCat.AutoSize = true;
-            this.ckCat.Location = new System.Drawing.Point(118, 85);
-            this.ckCat.Name = "ckCat";
-            this.ckCat.Size = new System.Drawing.Size(67, 17);
-            this.ckCat.TabIndex = 9;
-            this.ckCat.Text = "Catalogs";
-            this.ckCat.UseVisualStyleBackColor = true;
+            this.button2.Location = new System.Drawing.Point(20, 569);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(145, 23);
+            this.button2.TabIndex = 23;
+            this.button2.Text = "Format SD Card!";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
+            // chkVideos
+            // 
+            this.chkVideos.AutoSize = true;
+            this.chkVideos.Location = new System.Drawing.Point(7, 108);
+            this.chkVideos.Name = "chkVideos";
+            this.chkVideos.Size = new System.Drawing.Size(58, 17);
+            this.chkVideos.TabIndex = 10;
+            this.chkVideos.Text = "Videos";
+            this.chkVideos.UseVisualStyleBackColor = true;
             // 
             // GFUForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(637, 570);
+            this.ClientSize = new System.Drawing.Size(637, 615);
+            this.Controls.Add(this.button2);
             this.Controls.Add(this.lblVer);
             this.Controls.Add(this.lbSRAM);
             this.Controls.Add(this.lbReboot);
@@ -445,6 +469,8 @@
         private System.Windows.Forms.Label lbSRAM;
         private System.Windows.Forms.Label lblVer;
         private System.Windows.Forms.CheckBox ckCat;
+        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.CheckBox chkVideos;
     }
 }
 
