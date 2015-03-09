@@ -405,42 +405,11 @@ namespace GFU
 
                 Application.DoEvents();
 
- 
-
-                if (!ckHC.Checked && !ckCat.Checked)
-                {
-                    Directory.Delete(path + @"\HCFirmware", true); // user didn't want HC files
-                } 
-                else if (!ckHC.Checked) // delete firmware only, keep the other files (catalogs)
-                {
-                    Directory.Delete(Path.Combine(path, "HCFirmware"), true);
-                }
-
-
-                if (!chkVideos.Checked)
-                {
-                    try
-                    {
-                        Directory.Delete(Path.Combine(path, "Video"), true);
-                    }
-                    catch
-                    {
-                    }
-                }
-
-
                 if (ckCat.Checked)
                 {
                     try
                     {
-                        Directory.CreateDirectory(Path.Combine(path, "HCFirmware"));
-                    }
-                    catch
-                    {
-                    }
 
-                    try
-                    {
                         List<String> Catalogs =
                             Directory.GetFiles(path + "\\Catalogs", "*.*", SearchOption.AllDirectories).ToList();
 
@@ -457,6 +426,31 @@ namespace GFU
                     }
                 }
 
+                if (!ckHC.Checked && !ckCat.Checked)
+                {
+                    Directory.Delete(path + @"\HCFirmware", true); // user didn't want HC files
+                } 
+                else if (!ckHC.Checked) // delete firmware only, keep the other files (catalogs)
+                {
+                    string[] fs = Directory.GetFiles(Path.Combine(path,"Catalogs"));
+                    foreach (string s in fs)
+                    {
+                        if (s.ToLower().EndsWith(".bin"))
+                            File.Delete(s);
+                    }
+                }
+
+
+                if (!chkVideos.Checked)
+                {
+                    try
+                    {
+                        Directory.Delete(Path.Combine(path, "Video"), true);
+                    }
+                    catch
+                    {
+                    }
+                }
 
                 if (!ckGemini.Checked)
                 {

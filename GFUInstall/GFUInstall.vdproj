@@ -256,7 +256,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Gemini Firmware Updater"
         "ProductCode" = "8:{3F11BEBE-E0EC-49C2-86A6-D8C3C71FE173}"
-        "PackageCode" = "8:{F80C660D-D9B6-4EF4-A0CA-3A5BC7B68E7C}"
+        "PackageCode" = "8:{F1F95031-B23A-4F57-859D-D44FAC848089}"
         "UpgradeCode" = "8:{543C4A07-DD67-4CA9-BE7A-64203A8D49F7}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"

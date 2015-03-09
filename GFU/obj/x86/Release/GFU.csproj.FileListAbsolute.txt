@@ -16,3 +16,4 @@ C:\proj\GFU\GFU\obj\x86\Release\GFU.Properties.Resources.resources
 C:\proj\GFU\GFU\obj\x86\Release\GFU.csproj.GenerateResource.Cache
 C:\proj\GFU\GFU\obj\x86\Release\GFU.exe
 C:\proj\GFU\GFU\obj\x86\Release\GFU.pdb
+C:\proj\GFU\GFU\obj\x86\Release\GFU.csprojResolveAssemblyReference.cache
