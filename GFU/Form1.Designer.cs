@@ -44,6 +44,7 @@
             this.lbUpload = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.chkVideos = new System.Windows.Forms.CheckBox();
             this.ckCat = new System.Windows.Forms.CheckBox();
             this.ckFlash = new System.Windows.Forms.CheckBox();
             this.ckHC = new System.Windows.Forms.CheckBox();
@@ -61,7 +62,6 @@
             this.lbSRAM = new System.Windows.Forms.Label();
             this.lblVer = new System.Windows.Forms.Label();
             this.button2 = new System.Windows.Forms.Button();
-            this.chkVideos = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -225,6 +225,16 @@
             this.panel1.Size = new System.Drawing.Size(284, 132);
             this.panel1.TabIndex = 15;
             // 
+            // chkVideos
+            // 
+            this.chkVideos.AutoSize = true;
+            this.chkVideos.Location = new System.Drawing.Point(78, 85);
+            this.chkVideos.Name = "chkVideos";
+            this.chkVideos.Size = new System.Drawing.Size(58, 17);
+            this.chkVideos.TabIndex = 10;
+            this.chkVideos.Text = "Videos";
+            this.chkVideos.UseVisualStyleBackColor = true;
+            // 
             // ckCat
             // 
             this.ckCat.AutoSize = true;
@@ -382,16 +392,6 @@
             this.button2.Text = "Format SD Card!";
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
-            // 
-            // chkVideos
-            // 
-            this.chkVideos.AutoSize = true;
-            this.chkVideos.Location = new System.Drawing.Point(78, 85);
-            this.chkVideos.Name = "chkVideos";
-            this.chkVideos.Size = new System.Drawing.Size(58, 17);
-            this.chkVideos.TabIndex = 10;
-            this.chkVideos.Text = "Videos";
-            this.chkVideos.UseVisualStyleBackColor = true;
             // 
             // GFUForm
             // 
