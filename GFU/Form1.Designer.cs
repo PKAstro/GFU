@@ -62,6 +62,7 @@
             this.lbSRAM = new System.Windows.Forms.Label();
             this.lblVer = new System.Windows.Forms.Label();
             this.button2 = new System.Windows.Forms.Button();
+            this.lbStat = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -328,7 +329,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(233, 574);
+            this.label4.Location = new System.Drawing.Point(228, 631);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(196, 13);
             this.label4.TabIndex = 16;
@@ -377,7 +378,7 @@
             // 
             // lblVer
             // 
-            this.lblVer.Location = new System.Drawing.Point(485, 574);
+            this.lblVer.Location = new System.Drawing.Point(482, 626);
             this.lblVer.Name = "lblVer";
             this.lblVer.Size = new System.Drawing.Size(140, 23);
             this.lblVer.TabIndex = 22;
@@ -385,7 +386,7 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(20, 569);
+            this.button2.Location = new System.Drawing.Point(20, 626);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(145, 23);
             this.button2.TabIndex = 23;
@@ -393,11 +394,22 @@
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
+            // lbStat
+            // 
+            this.lbStat.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbStat.ForeColor = System.Drawing.Color.Blue;
+            this.lbStat.Location = new System.Drawing.Point(22, 561);
+            this.lbStat.Name = "lbStat";
+            this.lbStat.Size = new System.Drawing.Size(603, 57);
+            this.lbStat.TabIndex = 24;
+            this.lbStat.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // GFUForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(637, 615);
+            this.ClientSize = new System.Drawing.Size(642, 653);
+            this.Controls.Add(this.lbStat);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.lblVer);
             this.Controls.Add(this.lbSRAM);
@@ -471,6 +483,7 @@
         private System.Windows.Forms.CheckBox ckCat;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.CheckBox chkVideos;
+        private System.Windows.Forms.Label lbStat;
     }
 }
 

@@ -131,6 +131,15 @@ namespace GFU
             ResetButton();
         }
 
+
+        void Status(string s)
+        {
+            if (InvokeRequired)
+                BeginInvoke(new Action(() => { lbStat.Text = s; lbStat.Update(); }));
+            else
+            { lbStat.Text = s; lbStat.Update(); }
+        }
+
         private void tmTimer_Tick(object sender, EventArgs e)
         {
             tmTimer.Stop();
@@ -180,13 +189,20 @@ namespace GFU
                 button1.BackColor = Color.Yellow;
                 button1.Update();
 
+                Status("Connecting to Gemini...");
+
                 if (!CheckVersion())
                 {
                     ResetButton();
                     bError = true;
                     previousDateTime = "(unknown)";
+                    ResetButton();
+                    Status("Gemini not connected");
                     return;
                 }
+
+                Status("Gemini Connected!");
+
 
                 button1.Text = "Stop";
                 button1.BackColor = Color.Red;
@@ -203,6 +219,9 @@ namespace GFU
                         progDownload.Minimum = 0;
                         progDownload.Maximum = 1000;
                         progDownload.Value = 0;
+
+                        Status("Downloading firmware...");
+
                         Application.DoEvents();
 
                         var path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\GFU";
@@ -211,6 +230,7 @@ namespace GFU
                         System.IO.Directory.CreateDirectory(path);
                         using (client = new MyWebClient())
                         {
+                            client.Timeout = 5000;
                             client.DownloadProgressChanged +=
                                 new DownloadProgressChangedEventHandler(client_DownloadProgressChanged);
                             client.DownloadFileCompleted += new AsyncCompletedEventHandler(client_DownloadFileCompleted);
@@ -258,6 +278,7 @@ namespace GFU
                 {
                     eCancel.Set();  //cause a stop event
                     bCancel = true;
+                    Status("Update Aborted");
                 }
             }
 
@@ -364,6 +385,7 @@ namespace GFU
                     (ex as WebException).Message, "Cannot connect to Gemini: " + txtIP.Text, MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
                 bError = true;
+                ResetButton();
                 return false;
             }
 
@@ -448,6 +470,9 @@ namespace GFU
 
             try
             {
+
+                Status("Extracting files...");
+
                 using (ZipFile zip1 = ZipFile.Read(file))
                 {
                     zip1.ExtractProgress += new EventHandler<ExtractProgressEventArgs>(zip1_ExtractProgress);
@@ -597,6 +622,8 @@ namespace GFU
                 progUpload.Value = 0;
                 lbUpload.BackColor = Color.Yellow;
                 totalFiles = Directory.GetFiles(path, "*.*", SearchOption.AllDirectories).Count();
+
+                Status("Uploading files...");
                 ftpAll(path, txtIP.Text, txtUser.Text, txtPwd.Text);
 
                 if (bError || bCancel)
@@ -616,11 +643,16 @@ namespace GFU
 
                     if (files.Count() > 0)
                     {
+
+                        Status("Restarting Gemini...");
+
                         Gemini_Reboot(); //reboot just in case
 
                         string ff = files[0];
                         DateTime dt = File.GetCreationTime(ff);
                         string fn = Path.GetFileName(ff);
+
+                        Status("Ready to flash");
 
                         DialogResult res = MessageBox.Show(this,
                             "Upload Completed!\n\nDo you want to flash firmware file " + fn + " dated " +
@@ -630,6 +662,8 @@ namespace GFU
 
                         if (res == DialogResult.Yes)
                         {
+                            Status("Removing old firmware file...");
+
                             DELETE(old_firmware_name, "Delete " + old_firmware_name);
                                 // remove old firmware file (pre-2012) that causes flash to fail
 
@@ -645,6 +679,8 @@ namespace GFU
                             string file_idx = "";
                             string idx;
 
+                            Status("Getting firmware version...");
+
                             try
                             {
                                 idx = GET("gfu.cgi", "");
@@ -655,6 +691,7 @@ namespace GFU
                                     "Failed to get firmware listing from Gemini!\n\nGET(gfu.cgi)\n" + ex.ToString(),
                                     "Flash Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
                                 bError = true;
+                                ResetButton();
                                 return false;
 
                             }
@@ -677,6 +714,7 @@ namespace GFU
                                     "Did not find firmware on SD card! Something didn't go right, nothing was flashed.",
                                     "Failed to find firmware bin file", MessageBoxButtons.OK, MessageBoxIcon.Hand);
                                 bError = false;
+                                ResetButton();
                                 return false;
                             }
 
@@ -688,6 +726,8 @@ namespace GFU
 
                             try
                             {
+                                Status("Saving settings...");
+
                                 Gemini_Save_Settings();
                             }
                             catch (Exception ex1)
@@ -696,6 +736,8 @@ namespace GFU
 
                             try
                             {
+                                Status("Flashing new firmware...");
+
                                 Flash(file_idx);
                             }
                             catch (Exception ex1)
@@ -704,6 +746,7 @@ namespace GFU
                                 MessageBox.Show(this, "Flash didn't complete." + ex1.Message, "Failed to flash",
                                     MessageBoxButtons.OK, MessageBoxIcon.Error);
                                 bError = true;
+                                ResetButton();
                                 return false;
                             }
                             lbFlash.BackColor = Color.Green;
@@ -715,6 +758,8 @@ namespace GFU
 
                             try
                             {
+                                Status("SRAM Reset...");
+
                                 Gemini_SRAM_Reset();
                             }
                             catch (Exception ex2)
@@ -722,12 +767,15 @@ namespace GFU
                                 MessageBox.Show(this, "SRAM Reset didn't complete." + ex2.Message,
                                     "Failed to reset SRAM", MessageBoxButtons.OK, MessageBoxIcon.Error);
                                 bError = true;
+                                ResetButton();
                                 return false;
                             }
 
 
                             try
                             {
+                                Status("Reloading settings...");
+
                                 Gemini_Load_Settings();
 
                             }
@@ -744,6 +792,8 @@ namespace GFU
 
                             try
                             {
+                                Status("Rebooting Gemini...");
+
                                 Gemini_Reboot();
                             }
                             catch (Exception ex3)
@@ -751,19 +801,25 @@ namespace GFU
                                 MessageBox.Show(this, "Reboot didn't complete." + ex3.Message, "Failed to reboot",
                                     MessageBoxButtons.OK, MessageBoxIcon.Error);
                                 bError = true;
+                                ResetButton();
                                 return false;
                             }
                             lbReboot.BackColor = Color.Green;
                             lbReboot.Text = "Done!";
                             lbReboot.Update();
+                            Status("DONE!!! Please restart Gemini.");
+
                             Application.DoEvents();
+
                             MessageBox.Show(this,
                                 "Flashing completed!\n\nPlease turn off and on your Gemini to complete the process.",
                                 "All Done!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                            ResetButton();
                         }
                     }
                 }
-
+                ResetButton();
                 return true;
             }
             catch (Exception ex)
@@ -837,6 +893,7 @@ namespace GFU
                 statDecompress.Text = "Failed!";
                 MessageBox.Show("Failed to decompress", "Failed to decompress archive\n\n" + e.ArchiveName,
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
+                ResetButton();
                 throw new Exception("Failed to decompress");
 
             }
@@ -855,6 +912,7 @@ namespace GFU
             {
                 if (bError) return false;
 
+                CheckCancel();
                 string p = Path.GetFileName(d);
 
                 try
@@ -883,6 +941,7 @@ namespace GFU
                                 "Failed to connect to Gemini:\n\nError: " + (ex as WebException).Message,
                                 "Cannot connect to Gemini: " + txtIP.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                             bError = true;
+                            ResetButton();
                             throw new Exception("Couldn't upload files to Gemini");
                         }
 
@@ -1040,10 +1099,11 @@ namespace GFU
 #endif
 
 
-            using (WebClient webClient = new WebClient())
+            using (MyWebClient webClient = new MyWebClient())
             {
                 webClient.Credentials = new NetworkCredential(uname, pwd);
 
+                webClient.Timeout = 5000;
                 string[] files2 = Directory.GetFiles(fromPath);
                 foreach (string f in files2)
                 {
@@ -1054,16 +1114,22 @@ namespace GFU
 
                     string fname = Path.GetFileName(f);
                     try
-                    {
+                    {                        
                         webClient.UploadFile("ftp://" + to + "/" + fname, f);
+                        
                         while (webClient.IsBusy)
+                        {
+                            CheckCancel();
                             System.Threading.Thread.Sleep(100);
+
+                        }
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show(this, ex.Message + "\n\n" + to + "/" + fname,
+                        MessageBox.Show(this, ex.Message + "\n\n" + to + "/" + fname + "\n\n" + ex.ToString(),
                             "Failed to FTP file", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         bError = true;
+                        ResetButton();
                         break;
                     }
                     try
@@ -1090,9 +1156,16 @@ namespace GFU
 
         private void GFUForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            SaveSettings();
             bError = true;
             bCancel = true;
+            eCancel.Set();
+
+            try
+            {
+                SaveSettings();
+            }
+            catch { }
+
             string path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\GFU\\Upload";
             try
             {
@@ -1126,11 +1199,11 @@ namespace GFU
             return true;
         }
 
-        private bool Submit(string f, string s)
+        private bool Submit(string f, string s, int timeout = 5000)
         {
             WebRequest req = WebRequest.Create("http://" + txtIP.Text + "/en/" + f + "?" + s);
             req.Credentials = new NetworkCredential(txtUser.Text, txtPwd.Text);
-            req.Timeout = 1000; // don't worry about the timeout here
+            req.Timeout = timeout; // don't worry about the timeout here
 
             req.Method = "GET";
             WebResponse res = req.GetResponse();
@@ -1139,11 +1212,11 @@ namespace GFU
             return true;
         }
 
-        private string GET(string f, string s)
+        private string GET(string f, string s, int timeout = 5000)
         {
             WebRequest req = WebRequest.Create("http://" + txtIP.Text + "/en/" + f + "?" + s);
             req.Credentials = new NetworkCredential(txtUser.Text, txtPwd.Text);
-            req.Timeout = 5000;
+            req.Timeout = timeout;
 
             req.Method = "GET";
             WebResponse res = req.GetResponse();
@@ -1189,6 +1262,7 @@ namespace GFU
                                 "Failed to connect to Gemini:\n\nError: " + (ex as WebException).Message,
                                 "Cannot connect to Gemini: " + txtIP.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                             bError = true;
+                            ResetButton();
                             throw new Exception("Couldn't delete a file on Gemini SD card: " + f);
                         }
 
@@ -1203,7 +1277,7 @@ namespace GFU
         {
             try
             {
-                Submit("firmware.cgi", "bC=Cold Reboot");
+                Submit("firmware.cgi", "bC=Cold Reboot", 10000);
             }
             catch
             {
@@ -1230,17 +1304,18 @@ namespace GFU
             {
                 Submit("index.cgi", "ff=" + fname);
             }
-            catch
+            catch (Exception ex)
             {
+
             }
-            return WaitForGemini("Flash Firmware");
+            return WaitForGemini("Flash Firmware", 12000);
         }
 
-        private bool WaitForGemini(string msg)
+        private bool WaitForGemini(string msg, int timeout = 5000)
         {
             try
             {
-                string res = GET("firmware.cgi", "");
+                string res = GET("firmware.cgi", "", timeout);
                 return true;
             }
             catch (Exception ex)
@@ -1273,13 +1348,17 @@ namespace GFU
 
         private class MyWebClient : WebClient
         {
+            public int Timeout { get; set; }
             protected override WebRequest GetWebRequest(Uri uri)
             {
                 WebRequest w = base.GetWebRequest(uri);
-                w.Timeout =  5 * 60 * 1000;
+
+                w.Timeout = Timeout;
+                //((HttpWebRequest)w).ReadWriteTimeout = Timeout;
                 return w;
             }
         }
     }
+
 
 }

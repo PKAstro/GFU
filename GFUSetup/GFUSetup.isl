@@ -4361,9 +4361,9 @@ UwBpAG4AZwBsAGUASQBtAGEAZwBlAAEARQB4AHAAcgBlAHMAcwA=
 		<row><td>PROGMSG_IIS_ROLLBACKVROOTS</td><td>##IDS_PROGMSG_IIS_ROLLBACKVROOTS##</td><td/></row>
 		<row><td>PROGMSG_IIS_ROLLBACKWEBSERVICEEXTENSIONS</td><td>##IDS_PROGMSG_IIS_ROLLBACKWEBSERVICEEXTENSIONS##</td><td/></row>
 		<row><td>PROGRAMFILETOLAUNCHATEND</td><td>[INSTALLDIR]GFU.Primary output</td><td/></row>
-		<row><td>ProductCode</td><td>{00E89FF7-3E35-40B4-B54B-06747C27232D}</td><td/></row>
+		<row><td>ProductCode</td><td>{5DBC56CF-8706-41A9-BA7F-EA3E44AD1F7A}</td><td/></row>
 		<row><td>ProductName</td><td>GFU</td><td/></row>
-		<row><td>ProductVersion</td><td>1.00.21</td><td/></row>
+		<row><td>ProductVersion</td><td>1.00.22</td><td/></row>
 		<row><td>ProgressType0</td><td>install</td><td/></row>
 		<row><td>ProgressType1</td><td>Installing</td><td/></row>
 		<row><td>ProgressType2</td><td>installed</td><td/></row>
