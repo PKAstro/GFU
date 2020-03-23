@@ -1,23 +1,69 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GFU", "GFU\GFU.csproj", "{3D6A8157-225B-4482-92C8-5A6A8012A3C2}"
 EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "GFUInstall", "GFUInstall\GFUInstall.vdproj", "{7571C3F7-5177-475B-84A4-5C40603BAC92}"
+Project("{6141683F-8A12-4E36-9623-2EB02B2C2303}") = "GFUSetup", "GFUSetup\GFUSetup.isproj", "{40536DC2-2485-4672-98F3-86332037EF65}"
+	ProjectSection(ProjectDependencies) = postProject
+		{3D6A8157-225B-4482-92C8-5A6A8012A3C2} = {3D6A8157-225B-4482-92C8-5A6A8012A3C2}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		CD_ROM|Any CPU = CD_ROM|Any CPU
+		CD_ROM|x86 = CD_ROM|x86
+		Debug|Any CPU = Debug|Any CPU
 		Debug|x86 = Debug|x86
+		DVD-5|Any CPU = DVD-5|Any CPU
+		DVD-5|x86 = DVD-5|x86
+		Release|Any CPU = Release|Any CPU
 		Release|x86 = Release|x86
+		SingleImage|Any CPU = SingleImage|Any CPU
+		SingleImage|x86 = SingleImage|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3D6A8157-225B-4482-92C8-5A6A8012A3C2}.CD_ROM|Any CPU.ActiveCfg = Release|Any CPU
+		{3D6A8157-225B-4482-92C8-5A6A8012A3C2}.CD_ROM|Any CPU.Build.0 = Release|Any CPU
+		{3D6A8157-225B-4482-92C8-5A6A8012A3C2}.CD_ROM|x86.ActiveCfg = Release|x86
+		{3D6A8157-225B-4482-92C8-5A6A8012A3C2}.CD_ROM|x86.Build.0 = Release|x86
+		{3D6A8157-225B-4482-92C8-5A6A8012A3C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3D6A8157-225B-4482-92C8-5A6A8012A3C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3D6A8157-225B-4482-92C8-5A6A8012A3C2}.Debug|x86.ActiveCfg = Debug|x86
 		{3D6A8157-225B-4482-92C8-5A6A8012A3C2}.Debug|x86.Build.0 = Debug|x86
+		{3D6A8157-225B-4482-92C8-5A6A8012A3C2}.DVD-5|Any CPU.ActiveCfg = Debug|Any CPU
+		{3D6A8157-225B-4482-92C8-5A6A8012A3C2}.DVD-5|Any CPU.Build.0 = Debug|Any CPU
+		{3D6A8157-225B-4482-92C8-5A6A8012A3C2}.DVD-5|x86.ActiveCfg = Debug|x86
+		{3D6A8157-225B-4482-92C8-5A6A8012A3C2}.DVD-5|x86.Build.0 = Debug|x86
+		{3D6A8157-225B-4482-92C8-5A6A8012A3C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3D6A8157-225B-4482-92C8-5A6A8012A3C2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3D6A8157-225B-4482-92C8-5A6A8012A3C2}.Release|x86.ActiveCfg = Release|x86
 		{3D6A8157-225B-4482-92C8-5A6A8012A3C2}.Release|x86.Build.0 = Release|x86
-		{7571C3F7-5177-475B-84A4-5C40603BAC92}.Debug|x86.ActiveCfg = Debug
-		{7571C3F7-5177-475B-84A4-5C40603BAC92}.Release|x86.ActiveCfg = Release
-		{7571C3F7-5177-475B-84A4-5C40603BAC92}.Release|x86.Build.0 = Release
+		{3D6A8157-225B-4482-92C8-5A6A8012A3C2}.SingleImage|Any CPU.ActiveCfg = Release|Any CPU
+		{3D6A8157-225B-4482-92C8-5A6A8012A3C2}.SingleImage|Any CPU.Build.0 = Release|Any CPU
+		{3D6A8157-225B-4482-92C8-5A6A8012A3C2}.SingleImage|x86.ActiveCfg = Release|x86
+		{3D6A8157-225B-4482-92C8-5A6A8012A3C2}.SingleImage|x86.Build.0 = Release|x86
+		{40536DC2-2485-4672-98F3-86332037EF65}.CD_ROM|Any CPU.ActiveCfg = CD_ROM
+		{40536DC2-2485-4672-98F3-86332037EF65}.CD_ROM|Any CPU.Build.0 = CD_ROM
+		{40536DC2-2485-4672-98F3-86332037EF65}.CD_ROM|x86.ActiveCfg = CD_ROM
+		{40536DC2-2485-4672-98F3-86332037EF65}.CD_ROM|x86.Build.0 = CD_ROM
+		{40536DC2-2485-4672-98F3-86332037EF65}.Debug|Any CPU.ActiveCfg = DVD-5
+		{40536DC2-2485-4672-98F3-86332037EF65}.Debug|Any CPU.Build.0 = DVD-5
+		{40536DC2-2485-4672-98F3-86332037EF65}.Debug|x86.ActiveCfg = DVD-5
+		{40536DC2-2485-4672-98F3-86332037EF65}.Debug|x86.Build.0 = DVD-5
+		{40536DC2-2485-4672-98F3-86332037EF65}.DVD-5|Any CPU.ActiveCfg = DVD-5
+		{40536DC2-2485-4672-98F3-86332037EF65}.DVD-5|Any CPU.Build.0 = DVD-5
+		{40536DC2-2485-4672-98F3-86332037EF65}.DVD-5|x86.ActiveCfg = DVD-5
+		{40536DC2-2485-4672-98F3-86332037EF65}.DVD-5|x86.Build.0 = DVD-5
+		{40536DC2-2485-4672-98F3-86332037EF65}.Release|Any CPU.ActiveCfg = SingleImage
+		{40536DC2-2485-4672-98F3-86332037EF65}.Release|Any CPU.Build.0 = SingleImage
+		{40536DC2-2485-4672-98F3-86332037EF65}.Release|x86.ActiveCfg = SingleImage
+		{40536DC2-2485-4672-98F3-86332037EF65}.Release|x86.Build.0 = SingleImage
+		{40536DC2-2485-4672-98F3-86332037EF65}.SingleImage|Any CPU.ActiveCfg = SingleImage
+		{40536DC2-2485-4672-98F3-86332037EF65}.SingleImage|Any CPU.Build.0 = SingleImage
+		{40536DC2-2485-4672-98F3-86332037EF65}.SingleImage|x86.ActiveCfg = SingleImage
+		{40536DC2-2485-4672-98F3-86332037EF65}.SingleImage|x86.Build.0 = SingleImage
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

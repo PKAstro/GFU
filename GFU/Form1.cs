@@ -10,6 +10,7 @@ using System.Net;
 using System.IO;
 using System.Runtime.InteropServices;
 using Ionic.Zip;
+using System.Threading;
 //using EnterpriseDT.Net.Ftp;
 
 namespace GFU
@@ -18,9 +19,9 @@ namespace GFU
     {
         private string CombinedFile = "";
         private int totalFiles = 0;
-        private string downloadFile = "http://www.gemini-2.com/firmware1/current/combined.zip";
+        private string downloadFile = "http://losmandy.com/files/gemini/firmware/combined.zip";
         private bool bCancel = false;
-        private Timer tmTimer = new Timer();
+        private System.Windows.Forms.Timer tmTimer = new System.Windows.Forms.Timer();
         private bool bError = false;
 
         private int connections = 1;
@@ -30,8 +31,7 @@ namespace GFU
         private string[] http_links = new string[]
         {
 
-            "http://www.gemini-2.com/firmware1/current/combined.zip",
-            "http://gemini-2.com/firmware1/Older/NewGem-Dec-18-2012.zip",
+            "http://losmandy.com/files/gemini/firmware/combined.zip",
 
         };
 
@@ -44,6 +44,9 @@ namespace GFU
         private string copy_firmware_to = "HGM_Gem2.bin";
 
         private System.Threading.Semaphore semConn = null;
+
+        private ManualResetEvent eCancel = new ManualResetEvent(false);
+        MyWebClient client = null;
 
         public GFUForm()
         {
@@ -79,9 +82,12 @@ namespace GFU
             }
             catch (Exception XXX)
             {
-                MessageBox.Show(this, "Exception Caught:\n" + XXX.Message + "\n\n" + XXX.ToString(), "Error",
+                MessageBox.Show(this, "Exception Caught:\n" + XXX.Message, "Error",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+
+            this.Text = ProductName + " " + ProductVersion;
+
 
             if (Properties.Settings.Default.IPAddress != "")
             {
@@ -105,12 +111,12 @@ namespace GFU
                 cbZip.Items.AddRange(Zips);
 
                 cbZip.Items.AddRange(http_links);
-                cbZip.SelectedIndex = cbZip.FindString("http://www.gemini-2.com/firmware1/current/combined.zip", 0);
+                cbZip.SelectedIndex = cbZip.FindString("http://losmandy.com/files/gemini/firmware/combined.zip", 0);
 
             }
             catch (Exception YYY)
             {
-                MessageBox.Show(this, "Exception Caught:\n" + YYY.Message + "\n\n" + YYY.ToString(), "Error",
+                MessageBox.Show(this, "Exception Caught:\n" + YYY.Message, "Error",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
@@ -118,6 +124,11 @@ namespace GFU
 
             tmTimer.Tick += new EventHandler(tmTimer_Tick);
             tmTimer.Interval = 500;
+        }
+
+        internal void Stop()
+        {
+            ResetButton();
         }
 
         private void tmTimer_Tick(object sender, EventArgs e)
@@ -137,12 +148,14 @@ namespace GFU
         private void button1_Click(object sender, EventArgs e)
         {
             SaveSettings();
+
             if (button1.Text == "Start")
             {
+                eCancel.Reset();
 
-//                DELETE(old_firmware_name, "Delete " + old_firmware_name);   // remove old firmware file (pre-2012) that causes flash to fail
+                //                DELETE(old_firmware_name, "Delete " + old_firmware_name);   // remove old firmware file (pre-2012) that causes flash to fail
 
-//                return;
+                //                return;
 
                 bCancel = false;
                 button1.Enabled = false;
@@ -162,14 +175,22 @@ namespace GFU
                 statUpload.Text = "";
                 lbReboot.Text = "Reboot";
 
+
+                button1.Text = "Gemini";
+                button1.BackColor = Color.Yellow;
+                button1.Update();
+
                 if (!CheckVersion())
                 {
-                    button1.Enabled = true;
+                    ResetButton();
                     bError = true;
                     previousDateTime = "(unknown)";
                     return;
                 }
 
+                button1.Text = "Stop";
+                button1.BackColor = Color.Red;
+                button1.Enabled = true;
 
                 if (cbZip.Text == "" || cbZip.Text.StartsWith("http://")
                     || !File.Exists(cbZip.Text))
@@ -188,11 +209,13 @@ namespace GFU
                         var file = "download " + DateTime.Now.ToString("yyyy-MM-dd") + ".zip";
                         var fileName = Path.Combine(path, file);
                         System.IO.Directory.CreateDirectory(path);
-                        using (MyWebClient client = new MyWebClient())
+                        using (client = new MyWebClient())
                         {
                             client.DownloadProgressChanged +=
                                 new DownloadProgressChangedEventHandler(client_DownloadProgressChanged);
                             client.DownloadFileCompleted += new AsyncCompletedEventHandler(client_DownloadFileCompleted);
+
+                            client.Headers.Add("user-agent", $"GFU/{Application.ProductVersion} (${Environment.OSVersion.VersionString}; Trident/7.0; rv:11.0) like Gecko");
                             client.DownloadFileAsync(new System.Uri(downloadFile), fileName);
                         }
 
@@ -201,8 +224,10 @@ namespace GFU
                     catch (Exception ex)
                     {
                         MessageBox.Show(this,
-                            "Unable to download combined.zip:\n" + ex.Message + "\n\nDetails:\n" + ex.ToString(),
+                            "Unable to download combined.zip:\n" + ex.Message,
                             "Download " + downloadFile, MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                        ResetButton();
                     }
                 }
                 else //an older/saved version of firmware was already picked in the cb
@@ -216,13 +241,53 @@ namespace GFU
                         CombinedFile = cbZip.Text;
                         Application.DoEvents();
                         Decompress(CombinedFile);
+
+                    }
+                    else
+                    {
+                        ResetButton();
+                        return;
                     }
                 }
 
             }
-            button1.Text = "Start";
-            button1.Enabled = true;
+            else
+            {
+                var r = MessageBox.Show("Firmware update in progress. Are you sure you want to abort?", Application.ProductName, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (r == DialogResult.Yes)
+                {
+                    eCancel.Set();  //cause a stop event
+                    bCancel = true;
+                }
+            }
 
+        }
+
+
+        void CheckCancel()
+        {
+            if (eCancel.WaitOne(0)) {
+                throw new Exception("Stopped");
+            }
+        }
+
+
+        private void _reset()
+        {
+            if (client != null && client.IsBusy)
+            {
+                try { client.CancelAsync(); client = null; } catch { };
+            }
+
+            button1.Enabled = true;
+            button1.Text = "Start";
+            button1.BackColor = Color.Green;
+
+        }
+        internal void ResetButton()
+        {
+            if (InvokeRequired) BeginInvoke(new Action(() => _reset()));
+            else _reset();
         }
 
         private bool CheckVersion()
@@ -312,15 +377,13 @@ namespace GFU
                 progDownload.Value = 0;
                 statDownload.BackColor = Color.Red;
                 statDownload.Text = "Failed!";
-                button1.Text = "Start";
-                button1.Enabled = true;
-                bCancel = true;
+
 
                 MessageBox.Show(this,
-                    "Download failed to complete:\n\n" + e.Error.Message + "\n\nDetails:\n" + e.Error.ToString(),
+                    "Download failed to complete:\n\n" + e.Error.Message,
                     "Cannot download Combined.zip", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 bError = true;
-
+                ResetButton();
                 return;
             }
             progDownload.Value = 1000;
@@ -330,11 +393,7 @@ namespace GFU
             lbDownload.BackColor = Color.Green;
             Application.DoEvents();
             Decompress(CombinedFile);
-
-            button1.Text = "Start";
-            button1.Enabled = true;
-            bCancel = true;
-
+            ResetButton();
         }
 
         private string MyDir
@@ -359,7 +418,7 @@ namespace GFU
             {
             }
             progDownload.Update();
-            Application.DoEvents();
+            CheckCancel();
         }
 
         private bool Decompress(string file)
@@ -503,10 +562,11 @@ namespace GFU
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show(this, "Cannot copy GFU.CGI file!\n\n" + ex.ToString(), "Copy failed",
+                        MessageBox.Show(this, "Cannot copy GFU.CGI file!" + ex.ToString(), "Copy failed",
                             MessageBoxButtons.OK, MessageBoxIcon.Error);
                         bError = true;
                         bCancel = true;
+                        ResetButton();
                         return false;
                     }
                 }
@@ -708,9 +768,14 @@ namespace GFU
             }
             catch (Exception ex)
             {
-                MessageBox.Show(this, "Error" + "\n\n" + ex.Message + "\n\nDetails:\n" + ex.ToString(), "Error",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                if (ex.Message=="Stopped")
+                    MessageBox.Show(this, "Stopped!", Application.ProductName,
+                        MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                else 
+                    MessageBox.Show(this, "Error" + "\n\n" + ex.Message, "Error",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+            ResetButton();
             return false;
 
         }
@@ -745,19 +810,24 @@ namespace GFU
 
         private void zip1_ExtractProgress(object sender, ExtractProgressEventArgs e)
         {
+            CheckCancel();
+
             if (e.EntriesExtracted > 0)
             {
-                if (bCancel) e.Cancel = true;
+//                if (bCancel || eCancel.WaitOne(0)) e.Cancel = true;
+
                 try
                 {
                     progDecompress.Value = (int) ((1000*e.EntriesExtracted)/e.EntriesTotal);
                     totalFiles = e.EntriesTotal;
                     lbDecompressPercent.Text = (progDecompress.Value/10).ToString() + "%";
+                    Application.DoEvents();
                 }
                 catch
                 {
                 }
-                Application.DoEvents();
+
+//                Application.DoEvents();
             }
             if (e.EventType == ZipProgressEventType.Error_Saving)
             {
@@ -767,7 +837,8 @@ namespace GFU
                 statDecompress.Text = "Failed!";
                 MessageBox.Show("Failed to decompress", "Failed to decompress archive\n\n" + e.ArchiveName,
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
+                throw new Exception("Failed to decompress");
+
             }
         }
 
@@ -775,6 +846,7 @@ namespace GFU
 
         private bool ftpAll(string fromPath, string to, string uname, string pwd)
         {
+            CheckCancel();
             if (bError) return false;
 
             string[] dirs = Directory.GetDirectories(fromPath);
@@ -975,6 +1047,8 @@ namespace GFU
                 string[] files2 = Directory.GetFiles(fromPath);
                 foreach (string f in files2)
                 {
+                    CheckCancel();
+
                     if (bError) return false;
 
 
@@ -987,7 +1061,7 @@ namespace GFU
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show(this, ex.Message + "\n\n" + to + "/" + fname + "\n\nDetails:\n" + ex.ToString(),
+                        MessageBox.Show(this, ex.Message + "\n\n" + to + "/" + fname,
                             "Failed to FTP file", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         bError = true;
                         break;
@@ -1069,7 +1143,7 @@ namespace GFU
         {
             WebRequest req = WebRequest.Create("http://" + txtIP.Text + "/en/" + f + "?" + s);
             req.Credentials = new NetworkCredential(txtUser.Text, txtPwd.Text);
-            req.Timeout = 40000;
+            req.Timeout = 5000;
 
             req.Method = "GET";
             WebResponse res = req.GetResponse();
@@ -1172,7 +1246,7 @@ namespace GFU
             catch (Exception ex)
             {
                 MessageBox.Show(this,
-                    "Timeout occurred while waiting for Gemini to " + msg + "\n\nDetails:\n" + ex.ToString(),
+                    "Timeout occurred while waiting for Gemini to " + msg ,
                     "Failed to " + msg, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }

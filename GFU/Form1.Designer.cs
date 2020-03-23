@@ -332,7 +332,7 @@
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(196, 13);
             this.label4.TabIndex = 16;
-            this.label4.Text = "Copyright (c) 2014-15 by Paul Kanevsky";
+            this.label4.Text = "Copyright (c) 2014-20 by Paul Kanevsky";
             // 
             // cbZip
             // 
