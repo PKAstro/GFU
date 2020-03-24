@@ -807,7 +807,7 @@ namespace GFU
                             lbReboot.BackColor = Color.Green;
                             lbReboot.Text = "Done!";
                             lbReboot.Update();
-                            Status("DONE!!! Please restart Gemini.");
+                            Status("DONE! Please turn Gemini Off, then On.");
 
                             Application.DoEvents();
 
@@ -1103,7 +1103,10 @@ namespace GFU
             {
                 webClient.Credentials = new NetworkCredential(uname, pwd);
 
-                webClient.Timeout = 5000;
+                webClient.Timeout = 10000;
+
+                webClient.Encoding = System.Text.Encoding.UTF8;
+
                 string[] files2 = Directory.GetFiles(fromPath);
                 foreach (string f in files2)
                 {
@@ -1117,12 +1120,12 @@ namespace GFU
                     {                        
                         webClient.UploadFile("ftp://" + to + "/" + fname, f);
                         
-                        while (webClient.IsBusy)
-                        {
-                            CheckCancel();
-                            System.Threading.Thread.Sleep(100);
+                        //while (webClient.IsBusy)
+                        //{
+                        //    CheckCancel();
+                        //    System.Threading.Thread.Sleep(100);
 
-                        }
+                        //}
                     }
                     catch (Exception ex)
                     {
@@ -1130,7 +1133,7 @@ namespace GFU
                             "Failed to FTP file", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         bError = true;
                         ResetButton();
-                        break;
+                        return false;
                     }
                     try
                     {
@@ -1277,12 +1280,12 @@ namespace GFU
         {
             try
             {
-                Submit("firmware.cgi", "bC=Cold Reboot", 10000);
+                Submit("firmware.cgi", "bC=Cold Reboot", 15000);
             }
             catch
             {
             }
-            return WaitForGemini("Reboot");
+            return WaitForGemini("Reboot", 15000);
 
         }
 
@@ -1290,25 +1293,25 @@ namespace GFU
         {
             try
             {
-                Submit("firmware.cgi", "CL=RESET SRAM");
+                Submit("firmware.cgi", "CL=RESET SRAM", 15000);
             }
             catch
             {
             }
-            return WaitForGemini("SRAM Reset");
+            return WaitForGemini("SRAM Reset", 15000);
         }
 
         private bool Flash(string fname)
         {
             try
             {
-                Submit("index.cgi", "ff=" + fname);
+                Submit("index.cgi", "ff=" + fname, 20000);
             }
             catch (Exception ex)
             {
 
             }
-            return WaitForGemini("Flash Firmware", 12000);
+            return WaitForGemini("Flash Firmware", 20000);
         }
 
         private bool WaitForGemini(string msg, int timeout = 5000)
