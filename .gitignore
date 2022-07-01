@@ -2,3 +2,92 @@ GFUInstall/Release/GFUInstall.msi
 GFUInstall/Release/GFUInstall.msi
 *.msi
 *.msi
+.vs/GFU/v14/.suo
+GFU.v12.suo
+GFU/bin/Debug/GFU.exe
+GFU/bin/Debug/GFU.pdb
+GFU/bin/Debug/GFU.vshost.exe
+GFU/bin/Debug/Ionic.Zip.dll
+GFU/bin/Debug/gfu.cgi
+GFU/bin/Release/GFU.exe
+GFU/bin/Release/GFU.pdb
+GFU/bin/Release/GFU.vshost.exe
+GFU/bin/Release/Ionic.Zip.dll
+GFU/obj/Debug/DesignTimeResolveAssemblyReferences.cache
+GFU/obj/Debug/DesignTimeResolveAssemblyReferencesInput.cache
+GFU/obj/Debug/GFU.GFUForm.resources
+GFU/obj/Debug/GFU.Properties.Resources.resources
+GFU/obj/Debug/GFU.csproj.FileListAbsolute.txt
+GFU/obj/Debug/GFU.csproj.GenerateResource.Cache
+GFU/obj/Debug/GFU.csprojResolveAssemblyReference.cache
+GFU/obj/Debug/GFU.exe
+GFU/obj/Debug/GFU.pdb
+GFU/obj/Debug/TempPE/Properties.Resources.Designer.cs.dll
+GFU/obj/Release/DesignTimeResolveAssemblyReferences.cache
+GFU/obj/Release/DesignTimeResolveAssemblyReferencesInput.cache
+GFU/obj/Release/GFU.GFUForm.resources
+GFU/obj/Release/GFU.Properties.Resources.resources
+GFU/obj/Release/GFU.csproj.FileListAbsolute.txt
+GFU/obj/Release/GFU.csproj.GenerateResource.Cache
+GFU/obj/Release/GFU.csprojResolveAssemblyReference.cache
+GFU/obj/Release/GFU.exe
+GFU/obj/Release/GFU.pdb
+GFU/obj/Release/TempPE/Properties.Resources.Designer.cs.dll
+GFU/obj/x86/Debug/DesignTimeResolveAssemblyReferencesInput.cache
+GFU/obj/x86/Debug/GFU.GFUForm.resources
+GFU/obj/x86/Debug/GFU.Properties.Resources.resources
+GFU/obj/x86/Debug/GFU.csproj.GenerateResource.Cache
+GFU/obj/x86/Debug/GFU.csprojResolveAssemblyReference.cache
+GFU/obj/x86/Debug/GFU.exe
+GFU/obj/x86/Debug/GFU.pdb
+GFU/obj/x86/Debug/TempPE/Properties.Resources.Designer.cs.dll
+GFU/obj/x86/Release/DesignTimeResolveAssemblyReferencesInput.cache
+GFU/obj/x86/Release/TempPE/Properties.Resources.Designer.cs.dll
+GFU/packages.config
+GFUSetup/GFUSetup/Express/DVD-5/DiskImages/DISK1/0x0409.ini
+GFUSetup/GFUSetup/Express/DVD-5/DiskImages/DISK1/GFUSetup.exe
+GFUSetup/GFUSetup/Express/DVD-5/DiskImages/DISK1/Setup.ini
+GFUSetup/GFUSetup/Express/DVD-5/DiskImages/DISK1/program files/PKAstro/GFU/GFU.exe
+GFUSetup/GFUSetup/Express/DVD-5/DiskImages/DISK1/program files/PKAstro/GFU/GFU.exe.config
+GFUSetup/GFUSetup/Express/DVD-5/DiskImages/DISK1/program files/PKAstro/GFU/GFU.ico
+GFUSetup/GFUSetup/Express/DVD-5/DiskImages/DISK1/program files/PKAstro/GFU/Ionic.Zip.dll
+GFUSetup/GFUSetup/Express/DVD-5/DiskImages/DISK1/program files/PKAstro/GFU/gfu.cgi
+GFUSetup/GFUSetup/Express/DVD-5/LogFiles/3-22-2020 11-13-23 PM.txt
+GFUSetup/GFUSetup/Express/DVD-5/LogFiles/3-22-2020 11-15-55 PM.txt
+GFUSetup/GFUSetup/Express/DVD-5/LogFiles/3-22-2020 11-17-08 PM.txt
+GFUSetup/GFUSetup/Express/DVD-5/LogFiles/3-22-2020 11-18-21 PM.txt
+GFUSetup/GFUSetup/Express/DVD-5/LogFiles/error
+GFUSetup/GFUSetup/Express/DVD-5/Reports/3-22-2020 11-13-27 PM.htm
+GFUSetup/GFUSetup/Express/DVD-5/Reports/3-22-2020 11-15-58 PM.htm
+GFUSetup/GFUSetup/Express/DVD-5/Reports/3-22-2020 11-17-11 PM.htm
+GFUSetup/GFUSetup/Express/DVD-5/Reports/3-22-2020 11-18-24 PM.htm
+GFUSetup/GFUSetup/Express/Interm/_IsIcoRes.Exe
+GFUSetup/GFUSetup/Express/SingleImage/DiskImages/DISK1/GFUSetup.exe
+GFUSetup/GFUSetup/Express/SingleImage/LogFiles/3-22-2020 05-58-08 PM.txt
+GFUSetup/GFUSetup/Express/SingleImage/LogFiles/3-22-2020 06-00-26 PM.txt
+GFUSetup/GFUSetup/Express/SingleImage/LogFiles/3-22-2020 06-06-19 PM.txt
+GFUSetup/GFUSetup/Express/SingleImage/LogFiles/3-22-2020 06-09-52 PM.txt
+GFUSetup/GFUSetup/Express/SingleImage/LogFiles/3-22-2020 11-20-10 PM.txt
+GFUSetup/GFUSetup/Express/SingleImage/LogFiles/3-22-2020 11-21-09 PM.txt
+GFUSetup/GFUSetup/Express/SingleImage/LogFiles/3-22-2020 11-22-48 PM.txt
+GFUSetup/GFUSetup/Express/SingleImage/LogFiles/3-23-2020 06-31-42 PM.txt
+GFUSetup/GFUSetup/Express/SingleImage/LogFiles/3-23-2020 07-11-48 PM.txt
+GFUSetup/GFUSetup/Express/SingleImage/LogFiles/3-23-2020 11-03-28 AM.txt
+GFUSetup/GFUSetup/Express/SingleImage/LogFiles/3-23-2020 11-08-01 AM.txt
+GFUSetup/GFUSetup/Express/SingleImage/Reports/3-22-2020 05-58-13 PM.htm
+GFUSetup/GFUSetup/Express/SingleImage/Reports/3-22-2020 06-00-29 PM.htm
+GFUSetup/GFUSetup/Express/SingleImage/Reports/3-22-2020 06-06-23 PM.htm
+GFUSetup/GFUSetup/Express/SingleImage/Reports/3-22-2020 06-09-55 PM.htm
+GFUSetup/GFUSetup/Express/SingleImage/Reports/3-22-2020 11-20-13 PM.htm
+GFUSetup/GFUSetup/Express/SingleImage/Reports/3-22-2020 11-21-12 PM.htm
+GFUSetup/GFUSetup/Express/SingleImage/Reports/3-22-2020 11-22-51 PM.htm
+GFUSetup/GFUSetup/Express/SingleImage/Reports/3-23-2020 06-31-45 PM.htm
+GFUSetup/GFUSetup/Express/SingleImage/Reports/3-23-2020 07-11-52 PM.htm
+GFUSetup/GFUSetup/Express/SingleImage/Reports/3-23-2020 11-03-32 AM.htm
+GFUSetup/GFUSetup/Express/SingleImage/Reports/3-23-2020 11-08-04 AM.htm
+UpgradeLog.htm
+UpgradeLog2.htm
+packages/Ionic.Zip.1.9.1.8/Ionic.Zip.1.9.1.8.nupkg
+packages/Ionic.Zip.1.9.1.8/lib/Ionic.Zip.dll
+packages/Ionic.Zip.1.9.1.8/nuget.bat
+GFUSetup/GFUSetup/Express/

@@ -920,7 +920,7 @@ namespace GFU
                     WebRequest request = WebRequest.Create("ftp://" + to + "/" + p);
                     request.Method = WebRequestMethods.Ftp.MakeDirectory;
                     request.Credentials = new NetworkCredential(uname, pwd);
-                    request.Timeout = 5000;
+                    request.Timeout = 15000;
                     using (var resp = (FtpWebResponse) request.GetResponse())
                     {
                         Console.WriteLine(resp.StatusCode);
@@ -1103,7 +1103,7 @@ namespace GFU
             {
                 webClient.Credentials = new NetworkCredential(uname, pwd);
 
-                webClient.Timeout = 10000;
+                webClient.Timeout = 90000;
 
                 webClient.Encoding = System.Text.Encoding.UTF8;
 

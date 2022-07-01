@@ -1,1 +1,11 @@
 C:\proj\GFU\GFU\bin\Debug\GFU.exe.config
+C:\Users\ypa\Documents\GFU\GFU\bin\Debug\GFU.exe.config
+C:\Users\ypa\Documents\GFU\GFU\obj\x86\Debug\GFU.csprojResolveAssemblyReference.cache
+C:\Users\ypa\Documents\GFU\GFU\obj\x86\Debug\GFU.GFUForm.resources
+C:\Users\ypa\Documents\GFU\GFU\obj\x86\Debug\GFU.Properties.Resources.resources
+C:\Users\ypa\Documents\GFU\GFU\obj\x86\Debug\GFU.csproj.GenerateResource.Cache
+C:\Users\ypa\Documents\GFU\GFU\bin\Debug\GFU.exe
+C:\Users\ypa\Documents\GFU\GFU\bin\Debug\GFU.pdb
+C:\Users\ypa\Documents\GFU\GFU\bin\Debug\Ionic.Zip.dll
+C:\Users\ypa\Documents\GFU\GFU\obj\x86\Debug\GFU.exe
+C:\Users\ypa\Documents\GFU\GFU\obj\x86\Debug\GFU.pdb
