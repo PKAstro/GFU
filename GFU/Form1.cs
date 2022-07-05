@@ -208,6 +208,14 @@ namespace GFU
                 button1.BackColor = Color.Red;
                 button1.Enabled = true;
 
+                if (tabControl1.SelectedIndex == 1)
+                {
+                    Decompress("", true);
+                    ResetButton();
+                    return;
+
+                }
+
                 if (cbZip.Text == "" || cbZip.Text.StartsWith("http://")
                     || !File.Exists(cbZip.Text))
                 {
@@ -284,6 +292,10 @@ namespace GFU
 
         }
 
+        private void DoAdvancedUpdate()
+        {
+
+        }
 
         void CheckCancel()
         {
@@ -443,7 +455,7 @@ namespace GFU
             CheckCancel();
         }
 
-        private bool Decompress(string file)
+        private bool Decompress(string file, bool advanced = false)
         {
             string path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\GFU\\Upload";
             try
@@ -473,12 +485,18 @@ namespace GFU
 
                 Status("Extracting files...");
 
-                using (ZipFile zip1 = ZipFile.Read(file))
+                if (!advanced)
                 {
-                    zip1.ExtractProgress += new EventHandler<ExtractProgressEventArgs>(zip1_ExtractProgress);
-                    zip1.ExtractAll(path);
+                    using (ZipFile zip1 = ZipFile.Read(file))
+                    {
+                        zip1.ExtractProgress += new EventHandler<ExtractProgressEventArgs>(zip1_ExtractProgress);
+                        zip1.ExtractAll(path);
+                    }
                 }
-
+                else
+                {
+                    ExtractAdvancedFiles(path);
+                }
 
 
                 progDownload.Value = 1000;
@@ -836,6 +854,156 @@ namespace GFU
 
         }
 
+        private void ExtractAdvancedFiles(string path)
+        {
+            var hc_files = lbHCFiles.Items.Cast<String>().ToList();
+            var gemini_files = lbGeminiFiles.Items.Cast<String>().ToList();
+
+            // all the Gemini files
+            foreach (var f in gemini_files)
+            {
+                var new_path = FindSubFolder(f, subsGemini);
+                new_path = Path.Combine(path, new_path);
+
+                string dir = "";
+
+                if (Directory.Exists(f))
+                    dir = new_path; // the whole thing is a directory
+                else
+                    dir = Path.GetDirectoryName(new_path);
+                if (!Directory.Exists(dir))
+                    Directory.CreateDirectory(dir);
+
+                // if it's a folder, copy all the files under it
+                if (Directory.Exists(f))
+                    CopyDirectory(f, new_path, true);
+                else
+                if (f.EndsWith(".zip", StringComparison.InvariantCulture))
+                {
+                    using (ZipFile zip1 = ZipFile.Read(f))
+                    {
+                        zip1.ExtractProgress += new EventHandler<ExtractProgressEventArgs>(zip1_ExtractProgress);
+                        zip1.ExtractAll(dir);
+                    }
+
+                }
+                else
+                    File.Copy(f, new_path);
+            }
+            
+            foreach (var f in hc_files)
+            {
+                var new_path = FindSubFolder(f,  null);
+                new_path = Path.Combine(path, new_path);
+                string dir = "";
+
+
+                var isDir = Directory.Exists(f);
+                if (isDir)
+                    dir = new_path; // the whole thing is a directory
+                else
+                    dir = Path.GetDirectoryName(new_path);
+
+
+                if (!dir.ToLower().Contains("\\hcfirmware"))
+                {
+                    if (isDir)
+                    {
+                        dir = Path.Combine(Path.Combine(Path.GetDirectoryName(dir), "HCFirmware"), Path.GetFileName(dir));
+                        new_path = dir;
+                    }
+                    else
+                    {
+                        dir = Path.Combine(dir, "HCFirmware");
+                        new_path = Path.Combine(dir, Path.GetFileName(new_path));
+                    }
+                }
+
+                if (!Directory.Exists(dir))
+                    Directory.CreateDirectory(dir);
+
+
+                // if it's a folder, copy all the files under it
+                if (Directory.Exists(f))
+                    CopyDirectory(f, new_path, true);
+                else
+                if (f.EndsWith(".zip", StringComparison.InvariantCulture))
+                {
+                    using (ZipFile zip1 = ZipFile.Read(f))
+                    {
+                        zip1.ExtractProgress += new EventHandler<ExtractProgressEventArgs>(zip1_ExtractProgress);
+                        zip1.ExtractAll(dir);
+                    }
+
+                }
+                else
+                    File.Copy(f, new_path);
+            }
+
+        }
+
+
+        static void CopyDirectory(string sourceDir, string destinationDir, bool recursive)
+        {
+            // Get information about the source directory
+            var dir = new DirectoryInfo(sourceDir);
+
+            // Check if the source directory exists
+            if (!dir.Exists)
+                throw new DirectoryNotFoundException($"Source directory not found: {dir.FullName}");
+
+            // Cache directories before we start copying
+            DirectoryInfo[] dirs = dir.GetDirectories();
+
+            // Create the destination directory
+            Directory.CreateDirectory(destinationDir);
+
+            // Get the files in the source directory and copy to the destination directory
+            foreach (FileInfo file in dir.GetFiles())
+            {
+                string targetFilePath = Path.Combine(destinationDir, file.Name);
+                file.CopyTo(targetFilePath);
+            }
+
+            // If recursive and copying subdirectories, recursively call this method
+            if (recursive)
+            {
+                foreach (DirectoryInfo subDir in dirs)
+                {
+                    string newDestinationDir = Path.Combine(destinationDir, subDir.Name);
+                    CopyDirectory(subDir.FullName, newDestinationDir, true);
+                }
+            }
+        }
+
+
+        string[] subsGemini = new string[]
+        {
+            "AltAz",
+            "Catalogs",
+            "DE",
+            "EN",
+            "ES",
+            "FR",
+            "HC",
+            "HCFirmware",
+            "MHC",
+            "Video"
+        };
+
+
+        private string FindSubFolder(string f, string[] subs)
+        {
+            if (subs!=null)
+                foreach(var d in subs)
+                {
+                    if (f.ToLower().Contains("\\" + d.ToLower() + "\\"))
+                        return f.Substring(f.ToLower().LastIndexOf(d.ToLower()) + 1);
+                }
+
+            return Path.GetFileName(f);
+        }
+
         private bool Gemini_Save_Settings()
         {
             try
@@ -954,150 +1122,7 @@ namespace GFU
 
                 ftpAll(dirPath, toPath, uname, pwd);
 
-                //string[] files = Directory.GetFiles(dirPath);
-                //foreach (string f in files)
-                //{
-                //    string fname = Path.GetFileName(f);
-                //    using (WebClient webClient = new WebClient())
-                //    {
-                //        webClient.Credentials = new NetworkCredential(uname, pwd);
-                //        webClient.UploadFile("ftp://" + toPath + "/" + fname, f);
-                //    }
-                //}
             }
-
-
-
-#if false
-            {
-                try
-                {
-                    string[] files2 = Directory.GetFiles(fromPath);
-
-                    EnterpriseDT.Net.Ftp.FTPConnection ftpConnection = new FTPConnection();
-                    ftpConnection.ServerAddress =  txtIP.Text;
-                    ftpConnection.UserName = uname;
-                    ftpConnection.Password = "aa";
-                    ftpConnection.AccountInfo = "";
-
-                    ftpConnection.Connect();
-
-                    string x = to.Replace(txtIP.Text, "");
-                    if (x.StartsWith("/")) x = x.Substring(1);
-
-                    ftpConnection.ChangeWorkingDirectory(x);
-
-                    foreach (string f in files2)
-                    {
-
-                        if (bError) return false;
-
-                        string fname = Path.GetFileName(f);
-
-                        try
-                        {
-                            ftpConnection.UploadFile(f, fname);
-                        }
-                        catch (Exception ex)
-                        {
-                            if (!bError)
-                            {
-                                bError = true;
-                                bCancel = true;
-                                MessageBox.Show(this, ex.Message + "\n" + fname + "\n\nDetails:\n" + ex.ToString(), "Failed to upload", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            }
-                        }
-                        progUpload.Value = (int)((1000 * UploadCount) / totalFiles);
-                        if (!bError)
-                        {
-                            UploadCount++;
-                            lbUploadPercent.Text = (progUpload.Value / 10).ToString() + "%" + " (" + UploadCount.ToString() + "/" + totalFiles.ToString() + ")";
-                            Application.DoEvents();
-                        }
-                    }
-
-                    ftpConnection.Close();
-
-                }
-                catch (Exception ex)
-                {
-                  
-                }
-            }
-//#else
-
-            {
-                try
-                {
-                    string[] files2 = Directory.GetFiles(fromPath);
-
-                    foreach (string f in files2)
-                    {
-
-                        if (bError) return false;
-
-                        string fname = Path.GetFileName(f);
-
-                        System.Threading.ThreadPool.QueueUserWorkItem(arg =>
-                        {
-                            semConn.WaitOne();
-
-
-                            using (MyWebClient webClient = new MyWebClient())
-                            {
-                                webClient.Credentials = new NetworkCredential(uname, pwd);
-              
-                                try
-                                {
-                                    webClient.UploadFile("ftp://" + to + "/" + fname, f);
-                                    while (webClient.IsBusy)
-                                        System.Threading.Thread.Sleep(100);
-                                }
-                                catch (Exception ex)
-                                {
-                                    lock (this)
-                                        this.Invoke(new Action(() =>
-                                        {
-                                            if (!bError)
-                                            {
-                                                bError = true;
-                                                bCancel = true;
-                                                MessageBox.Show(this,
-                                                    ex.Message + "\n" + fname + "\n\nDetails:\n" + ex.ToString(),
-                                                    "Failed to upload", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                                            }
-                                        }));
-                                }
-
-                                this.Invoke(new Action(() =>
-                                {
-                                    progUpload.Value = (int) ((1000*UploadCount)/totalFiles);
-                                    if (!bError)
-                                    {
-                                        UploadCount++;
-                                        lbUploadPercent.Text = (progUpload.Value/10).ToString() + "%" + " (" +
-                                                               UploadCount.ToString() + "/" + totalFiles.ToString() +
-                                                               ")";
-                                        Application.DoEvents();
-
-                                    }
-                                }));
-
-                            }
-                            semConn.Release();
-                        });
-
-
-                    }
-                }
-                catch (Exception ex)
-                {
-
-                }
-            }
-            return true;
-#endif
-
 
             using (MyWebClient webClient = new MyWebClient())
             {
@@ -1118,14 +1143,7 @@ namespace GFU
                     string fname = Path.GetFileName(f);
                     try
                     {                        
-                        webClient.UploadFile("ftp://" + to + "/" + fname, f);
-                        
-                        //while (webClient.IsBusy)
-                        //{
-                        //    CheckCancel();
-                        //    System.Threading.Thread.Sleep(100);
-
-                        //}
+                        webClient.UploadFile("ftp://" + to + "/" + fname, f);                     
                     }
                     catch (Exception ex)
                     {
@@ -1360,6 +1378,118 @@ namespace GFU
                 //((HttpWebRequest)w).ReadWriteTimeout = Timeout;
                 return w;
             }
+        }
+
+        private void lbGeminiDD_DragDrop(object sender, DragEventArgs e)
+        {
+            lbGeminiFiles_DragDrop(sender, e);
+        }
+
+        private void lblHCDD_Click(object sender, EventArgs e)
+        {
+            using (OpenFileDialog dialog = new OpenFileDialog())
+            {
+                dialog.Multiselect = true;
+                if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    lbHCFiles.Items.AddRange(dialog.FileNames);
+                }
+            }
+
+        }
+
+        private void lbGeminiDD_Click(object sender, EventArgs e)
+        {
+            using (OpenFileDialog dialog = new OpenFileDialog())
+            {
+                dialog.Multiselect = true;
+                if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    lbGeminiFiles.Items.AddRange(dialog.FileNames);
+                }
+            }
+
+        }
+
+        private void lbGeminiFiles_DragDrop(object sender, DragEventArgs e)
+        {
+            string[] files = e.Data.GetData(DataFormats.FileDrop) as string[]; // get all files droppeds  
+            if (files != null && files.Any())
+                lbGeminiFiles.Items.AddRange(files); 
+        }
+
+        private void lbHCFiles_DragDrop(object sender, DragEventArgs e)
+        {
+            string[] files = e.Data.GetData(DataFormats.FileDrop) as string[]; // get all files droppeds  
+            if (files != null && files.Any())
+                lbHCFiles.Items.AddRange(files);
+        }
+
+
+        private void lbGeminiFiles_DragOver(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+                e.Effect = DragDropEffects.Link;
+            else
+                e.Effect = DragDropEffects.None;
+        }
+
+        private void lbHCFiles_DragOver(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+                e.Effect = DragDropEffects.Link;
+            else
+                e.Effect = DragDropEffects.None;
+        }
+
+        private void lbGeminiDD_DragOver(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+                e.Effect = DragDropEffects.Link;
+            else
+                e.Effect = DragDropEffects.None;
+        }
+
+        private void lblHCDD_DragOver(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+                e.Effect = DragDropEffects.Link;
+            else
+                e.Effect = DragDropEffects.None;
+        }
+
+        private void lbGeminiFiles_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void lblHCDD_DragDrop(object sender, DragEventArgs e)
+        {
+            lbHCFiles_DragDrop(sender, e);
+        }
+
+        private void pbClearGemini_Click(object sender, EventArgs e)
+        {
+            lbGeminiFiles.Items.Clear();
+        }
+
+        private void pbClearHC_Click(object sender, EventArgs e)
+        {
+            lbHCFiles.Items.Clear();
+
+        }
+
+        private void lbGeminiFiles_DoubleClick(object sender, EventArgs e)
+        {
+            if (lbGeminiFiles.SelectedIndex >= 0)
+                lbGeminiFiles.Items.RemoveAt(lbGeminiFiles.SelectedIndex);
+        }
+
+        private void lbHCFiles_DoubleClick(object sender, EventArgs e)
+        {
+            if (lbHCFiles.SelectedIndex >= 0)
+                lbHCFiles.Items.RemoveAt(lbHCFiles.SelectedIndex);
+
         }
     }
 
