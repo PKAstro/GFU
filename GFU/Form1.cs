@@ -654,6 +654,7 @@ namespace GFU
                 lbUpload.BackColor = Color.Green;
 
                 statUpload.Text = "Done!";
+                bool flashed = false;
 
                 if (ckFlash.Checked)
                 {
@@ -680,6 +681,7 @@ namespace GFU
 
                         if (res == DialogResult.Yes)
                         {
+                            flashed = true;
                             Status("Removing old firmware file...");
 
                             DELETE(old_firmware_name, "Delete " + old_firmware_name);
@@ -836,6 +838,17 @@ namespace GFU
                             ResetButton();
                         }
                     }
+                }
+
+
+                if (!flashed && ckHC.Checked && Directory.Exists(path + @"\HCFirmware"))
+                {
+                    Status("Ready");
+
+                    DialogResult res = MessageBox.Show(this,
+                        "Upload Completed!\n\nPlease restart Gemini or disconnect/reconnect hand controller to flash new HC firmware", "File update completed", MessageBoxButtons.OK,
+                        MessageBoxIcon.Information);
+                 
                 }
                 ResetButton();
                 return true;
