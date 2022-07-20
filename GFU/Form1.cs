@@ -662,12 +662,25 @@ namespace GFU
 
                     if (files.Count() > 0)
                     {
+                        string ff = files[0];
 
+                        if (files.Count() > 1)
+                        {
+                            frmFirmware frm = new frmFirmware();
+                            frm.Files = files;
+                            DialogResult dlg = frm.ShowDialog(this);
+                            if (dlg == DialogResult.OK)
+                            {
+                                ff = frm.SelectedFile;
+                            }
+                            else
+                                return false;
+                        }
                         Status("Restarting Gemini...");
 
                         Gemini_Reboot(); //reboot just in case
 
-                        string ff = files[0];
+                     
                         DateTime dt = File.GetCreationTime(ff);
                         string fn = Path.GetFileName(ff);
 
@@ -1336,13 +1349,13 @@ namespace GFU
         {
             try
             {
-                Submit("index.cgi", "ff=" + fname, 20000);
+                Submit("index.cgi", "ff=" + fname, 30000);
             }
             catch (Exception ex)
             {
 
             }
-            return WaitForGemini("Flash Firmware", 20000);
+            return WaitForGemini("Flash Firmware", 30000);
         }
 
         private bool WaitForGemini(string msg, int timeout = 5000)
