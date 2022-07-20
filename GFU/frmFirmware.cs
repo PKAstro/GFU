@@ -22,6 +22,11 @@ namespace GFU
 
         private void button1_Click(object sender, EventArgs e)
         {
+            if (lbFirmware.SelectedIndex < 0)
+            {
+                MessageBox.Show("Please select a firmware file to flash", "GFU", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                return;
+            }
             SelectedFile = lbFirmware.SelectedItem as string;
             DialogResult = DialogResult.OK;
         }
