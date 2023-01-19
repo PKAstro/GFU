@@ -507,15 +507,23 @@ namespace GFU
 
                 Application.DoEvents();
 
- 
+
 
                 if (!ckHC.Checked && !ckCat.Checked)
                 {
-                    Directory.Delete(path + @"\HCFirmware", true); // user didn't want HC files
-                } 
+                    try
+                    {
+                        Directory.Delete(path + @"\HCFirmware", true); // user didn't want HC files
+                    }
+                    catch { }
+                }
                 else if (!ckHC.Checked) // delete firmware only, keep the other files (catalogs)
                 {
-                    Directory.Delete(Path.Combine(path, "HCFirmware"), true);
+                    try
+                    {
+                        Directory.Delete(Path.Combine(path, "HCFirmware"), true);
+                    }
+                    catch { }
                 }
 
 
