@@ -817,7 +817,7 @@ namespace GFU
                             {
                                 Status("Reloading settings...");
 
-                                Gemini_Load_Settings();
+                                //Gemini_Load_Settings();
 
                             }
                             catch (Exception ex3)
