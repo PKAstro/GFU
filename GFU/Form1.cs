@@ -799,9 +799,9 @@ namespace GFU
 
                             try
                             {
-                                Status("SRAM Reset...");
+                                //Status("SRAM Reset...");
 
-                                Gemini_SRAM_Reset();
+                                //Gemini_SRAM_Reset();
                             }
                             catch (Exception ex2)
                             {
