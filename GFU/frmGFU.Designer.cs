@@ -66,13 +66,15 @@
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.pbClearHC = new System.Windows.Forms.Button();
+            this.pbClearGemini = new System.Windows.Forms.Button();
             this.lbHCFiles = new System.Windows.Forms.ListBox();
             this.lbGeminiFiles = new System.Windows.Forms.ListBox();
             this.label7 = new System.Windows.Forms.Label();
             this.lblHCDD = new System.Windows.Forms.Label();
             this.lbGeminiDD = new System.Windows.Forms.Label();
-            this.pbClearGemini = new System.Windows.Forms.Button();
-            this.pbClearHC = new System.Windows.Forms.Button();
+            this.cbVersion = new System.Windows.Forms.ComboBox();
+            this.label5 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panel1.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -346,14 +348,14 @@
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(196, 13);
             this.label4.TabIndex = 16;
-            this.label4.Text = "Copyright (c) 2014-22 by Paul Kanevsky";
+            this.label4.Text = "Copyright (c) 2014-23 by Paul Kanevsky";
             // 
             // cbZip
             // 
             this.cbZip.FormattingEnabled = true;
-            this.cbZip.Location = new System.Drawing.Point(156, 80);
+            this.cbZip.Location = new System.Drawing.Point(151, 80);
             this.cbZip.Name = "cbZip";
-            this.cbZip.Size = new System.Drawing.Size(299, 24);
+            this.cbZip.Size = new System.Drawing.Size(304, 24);
             this.cbZip.TabIndex = 17;
             // 
             // lbReboot
@@ -433,6 +435,8 @@
             // tabPage1
             // 
             this.tabPage1.BackColor = System.Drawing.SystemColors.Control;
+            this.tabPage1.Controls.Add(this.label5);
+            this.tabPage1.Controls.Add(this.cbVersion);
             this.tabPage1.Controls.Add(this.statDownload);
             this.tabPage1.Controls.Add(this.lbDownload);
             this.tabPage1.Controls.Add(this.progDownload);
@@ -465,6 +469,29 @@
             this.tabPage2.Size = new System.Drawing.Size(606, 212);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Advanced";
+            // 
+            // pbClearHC
+            // 
+            this.pbClearHC.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pbClearHC.BackgroundImage")));
+            this.pbClearHC.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.pbClearHC.Location = new System.Drawing.Point(574, 151);
+            this.pbClearHC.Name = "pbClearHC";
+            this.pbClearHC.Size = new System.Drawing.Size(32, 32);
+            this.pbClearHC.TabIndex = 17;
+            this.pbClearHC.UseVisualStyleBackColor = true;
+            this.pbClearHC.Click += new System.EventHandler(this.pbClearHC_Click);
+            // 
+            // pbClearGemini
+            // 
+            this.pbClearGemini.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pbClearGemini.BackgroundImage")));
+            this.pbClearGemini.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.pbClearGemini.Location = new System.Drawing.Point(574, 70);
+            this.pbClearGemini.Margin = new System.Windows.Forms.Padding(0);
+            this.pbClearGemini.Name = "pbClearGemini";
+            this.pbClearGemini.Size = new System.Drawing.Size(32, 32);
+            this.pbClearGemini.TabIndex = 16;
+            this.pbClearGemini.UseVisualStyleBackColor = true;
+            this.pbClearGemini.Click += new System.EventHandler(this.pbClearGemini_Click);
             // 
             // lbHCFiles
             // 
@@ -534,28 +561,27 @@
             this.lbGeminiDD.DragDrop += new System.Windows.Forms.DragEventHandler(this.lbGeminiDD_DragDrop);
             this.lbGeminiDD.DragOver += new System.Windows.Forms.DragEventHandler(this.lbGeminiDD_DragOver);
             // 
-            // pbClearGemini
+            // cbVersion
             // 
-            this.pbClearGemini.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pbClearGemini.BackgroundImage")));
-            this.pbClearGemini.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.pbClearGemini.Location = new System.Drawing.Point(574, 70);
-            this.pbClearGemini.Margin = new System.Windows.Forms.Padding(0);
-            this.pbClearGemini.Name = "pbClearGemini";
-            this.pbClearGemini.Size = new System.Drawing.Size(32, 32);
-            this.pbClearGemini.TabIndex = 16;
-            this.pbClearGemini.UseVisualStyleBackColor = true;
-            this.pbClearGemini.Click += new System.EventHandler(this.pbClearGemini_Click);
+            this.cbVersion.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbVersion.FormattingEnabled = true;
+            this.cbVersion.Items.AddRange(new object[] {
+            "Gemini L6",
+            "Gemini L5"});
+            this.cbVersion.Location = new System.Drawing.Point(274, 14);
+            this.cbVersion.Name = "cbVersion";
+            this.cbVersion.Size = new System.Drawing.Size(181, 24);
+            this.cbVersion.TabIndex = 20;
+            this.cbVersion.SelectedIndexChanged += new System.EventHandler(this.cbVersion_SelectedIndexChanged);
             // 
-            // pbClearHC
+            // label5
             // 
-            this.pbClearHC.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pbClearHC.BackgroundImage")));
-            this.pbClearHC.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.pbClearHC.Location = new System.Drawing.Point(574, 151);
-            this.pbClearHC.Name = "pbClearHC";
-            this.pbClearHC.Size = new System.Drawing.Size(32, 32);
-            this.pbClearHC.TabIndex = 17;
-            this.pbClearHC.UseVisualStyleBackColor = true;
-            this.pbClearHC.Click += new System.EventHandler(this.pbClearHC_Click);
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(153, 18);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(115, 16);
+            this.label5.TabIndex = 21;
+            this.label5.Text = "Firmware Version:";
             // 
             // GFUForm
             // 
@@ -590,6 +616,7 @@
             this.panel1.PerformLayout();
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
+            this.tabPage1.PerformLayout();
             this.tabPage2.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -642,6 +669,8 @@
         private System.Windows.Forms.ListBox lbGeminiFiles;
         private System.Windows.Forms.Button pbClearHC;
         private System.Windows.Forms.Button pbClearGemini;
+        private System.Windows.Forms.ComboBox cbVersion;
+        private System.Windows.Forms.Label label5;
     }
 }
 

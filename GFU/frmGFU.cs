@@ -38,10 +38,9 @@ namespace GFU
         private string old_firmware_name = "Cur_Gem2.bin";
             // pre-2012 firmware cannot be flashed if this file is in the root directory -- Tom Hilton
 
-        private string copy_firmware_from = "NewGem.bin";
-            // for some subtle upgrade issues, need to make a copy of NewGem.bin and name it HGM_Gem2.bin -- Tom Hilton
+        private string copy_firmware_to = "NewGem.bin";
 
-        private string copy_firmware_to = "HGM_Gem2.bin";
+        private string copy_firmware_from = "HGM_Gem2.bin";
 
         private System.Threading.Semaphore semConn = null;
 
@@ -124,6 +123,7 @@ namespace GFU
 
             tmTimer.Tick += new EventHandler(tmTimer_Tick);
             tmTimer.Interval = 500;
+            cbVersion.SelectedIndex = 0;
         }
 
         internal void Stop()
@@ -460,9 +460,10 @@ namespace GFU
             string path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\GFU\\Upload";
             try
             {
-                System.IO.Directory.Delete(path, true); //delete old contents
+                FileSystemInfo inf = new DirectoryInfo(path);
+                inf.DeleteReadOnly();
             }
-            catch
+            catch (Exception ex)
             {
             }
 
@@ -507,13 +508,15 @@ namespace GFU
 
                 Application.DoEvents();
 
-
+                if (Directory.Exists(Path.Combine(path, "combined")))
+                    path = Path.Combine(path, "combined");
 
                 if (!ckHC.Checked && !ckCat.Checked)
                 {
                     try
                     {
-                        Directory.Delete(path + @"\HCFirmware", true); // user didn't want HC files
+                        FileSystemInfo inf = new DirectoryInfo(path + @"\HCFirmware");
+                        inf.DeleteReadOnly();
                     }
                     catch { }
                 }
@@ -521,29 +524,52 @@ namespace GFU
                 {
                     try
                     {
-                        Directory.Delete(Path.Combine(path, "HCFirmware"), true);
+                        FileSystemInfo inf = new DirectoryInfo(path + @"\HCFirmware");
+                        inf.DeleteReadOnly();
                     }
                     catch { }
                 }
+               
+                if (!ckCat.Checked)
+                {
+                    try
+                    {
+                        //Directory.Delete(path + @"\HCFirmware\Catalogs", true); // user didn't want Catalog files
+                        var dir = new DirectoryInfo(path + @"\HCFirmware");
 
+                        foreach (var c in dir.EnumerateFiles("*.guc"))
+                        {
+                            c.DeleteReadOnly();
+                        }
+                    }
+                    catch { }
+
+                    try { 
+                        FileSystemInfo inf = new DirectoryInfo(path + @"\Catalogs");
+                        inf.DeleteReadOnly();
+                    }
+                    catch { }
+                }
 
                 if (!chkVideos.Checked)
                 {
                     try
                     {
-                        Directory.Delete(Path.Combine(path, "Video"), true);
+                        FileSystemInfo inf = new DirectoryInfo(Path.Combine(path, "Video"));
+                        inf.DeleteReadOnly();                       
                     }
                     catch
                     {
                     }
                 }
                  
-
                 if (ckCat.Checked)
                 {
                     try
                     {
-                        Directory.CreateDirectory(Path.Combine(path, "HCFirmware"));
+                        FileSystemInfo inf = new DirectoryInfo(Path.Combine(path, "HCFirmware"));
+                        inf.DeleteReadOnly();
+                      
                     }
                     catch
                     {
@@ -557,7 +583,7 @@ namespace GFU
                         foreach (string f in Catalogs)
                         {
                             FileInfo mFile = new FileInfo(f);
-                            // to remove name collusion
+                            // to remove name collision
                             if (new FileInfo(path + "\\HCFirmware\\" + mFile.Name).Exists == false)
                                 mFile.CopyTo(path + "\\HCFirmware\\" + mFile.Name);
                         }
@@ -620,6 +646,19 @@ namespace GFU
                         ResetButton();
                         return false;
                     }
+
+                    // if HGM2_Gem2.bin file exists, rename it to NewGem.bin
+                    // so that it's not auto-flashed on reboot (6-2023):
+
+                    bool bFrom = File.Exists(Path.Combine(path, copy_firmware_from));
+                    bool bTo = File.Exists(Path.Combine(path, copy_firmware_to));
+                    if (bFrom && !bTo)
+                    {
+                        System.IO.File.Move(Path.Combine(path, copy_firmware_from), Path.Combine(path, copy_firmware_to));
+                    }
+
+
+
                 }
                 else // delete firmware files, since flash wasn't requested
                 {
@@ -684,9 +723,9 @@ namespace GFU
                             else
                                 return false;
                         }
-                        Status("Restarting Gemini...");
+//                        Status("Restarting Gemini...");
 
-                        Gemini_Reboot(); //reboot just in case
+//                        Gemini_Reboot(); //reboot just in case
 
                      
                         DateTime dt = File.GetCreationTime(ff);
@@ -708,11 +747,7 @@ namespace GFU
                             DELETE(old_firmware_name, "Delete " + old_firmware_name);
                                 // remove old firmware file (pre-2012) that causes flash to fail
 
-                            // make a copy of firmware file named HGM_Gem2.bin to make sure this is flashed in some rare upgrade cases, as per Tom Hilton
-                            // don't overwrite if 'HGM_Gem2.bin' already exists in the zip:
 
-                            bool bFrom = File.Exists(Path.Combine(path, copy_firmware_from));
-                            bool bTo = File.Exists(Path.Combine(path, copy_firmware_to));
 //                            if (!bTo && bFrom)
 //                                File.Copy(Path.Combine(path, copy_firmware_from), Path.Combine(path, copy_firmware_to));
 
@@ -858,6 +893,14 @@ namespace GFU
 
                             ResetButton();
                         }
+                    }
+                    else
+                    {
+                        Status("DONE! No firmware .bin file found to flash");
+                        MessageBox.Show(this,
+                              "Files uploaded. No bin file found to flash!",
+                              "All Done!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        ResetButton();
                     }
                 }
 
@@ -1042,7 +1085,8 @@ namespace GFU
         {
             try
             {
-                GET("firmware.cgi", "CS=Store+SRAM");
+                Submit("ser.cgx", "SE%3D>43610%3At%23"); // >43610: stores all user settings to be restored after flash
+                //GET("firmware.cgi", "CS=Store+SRAM");
             }
             catch
             {
@@ -1332,7 +1376,9 @@ namespace GFU
         {
             try
             {
-                Submit("firmware.cgi", "bC=Cold Reboot", 15000);
+
+                Submit("ser.cgx", "SE%3D>65534%3Ar%23");
+                //Submit("firmware.cgi", "bC=Cold Reboot", 15000);
             }
             catch
             {
@@ -1525,7 +1571,33 @@ namespace GFU
                 lbHCFiles.Items.RemoveAt(lbHCFiles.SelectedIndex);
 
         }
-    }
 
+
+        private void cbVersion_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (cbVersion.Text.Contains("L6"))
+                cbZip.Text = "http://losmandy.com/files/gemini/firmware/combined.zip";
+            else if (cbVersion.Text.Contains("L5"))
+                cbZip.Text = "http://losmandy.com/files/gemini/firmware/combined5.zip";
+
+        }
+    }
+    static class ExtensionMethods
+    {
+        public static void DeleteReadOnly(this FileSystemInfo fileSystemInfo)
+        {
+            var directoryInfo = fileSystemInfo as DirectoryInfo;
+            if (directoryInfo != null)
+            {
+                foreach (FileSystemInfo childInfo in directoryInfo.GetFileSystemInfos())
+                {
+                    childInfo.DeleteReadOnly();
+                }
+            }
+
+            fileSystemInfo.Attributes = FileAttributes.Normal;
+            fileSystemInfo.Delete();
+        }
+    }
 
 }
