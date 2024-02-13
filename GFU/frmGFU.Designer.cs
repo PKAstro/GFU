@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GFUForm));
             this.button1 = new System.Windows.Forms.Button();
             this.lbDownload = new System.Windows.Forms.Label();
@@ -44,6 +45,7 @@
             this.lbUpload = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.ckShowBeta = new System.Windows.Forms.CheckBox();
             this.chkVideos = new System.Windows.Forms.CheckBox();
             this.ckCat = new System.Windows.Forms.CheckBox();
             this.ckFlash = new System.Windows.Forms.CheckBox();
@@ -65,6 +67,8 @@
             this.lbStat = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.label5 = new System.Windows.Forms.Label();
+            this.cbVersion = new System.Windows.Forms.ComboBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.pbClearHC = new System.Windows.Forms.Button();
             this.pbClearGemini = new System.Windows.Forms.Button();
@@ -73,8 +77,7 @@
             this.label7 = new System.Windows.Forms.Label();
             this.lblHCDD = new System.Windows.Forms.Label();
             this.lbGeminiDD = new System.Windows.Forms.Label();
-            this.cbVersion = new System.Windows.Forms.ComboBox();
-            this.label5 = new System.Windows.Forms.Label();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panel1.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -225,6 +228,7 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.ckShowBeta);
             this.panel1.Controls.Add(this.chkVideos);
             this.panel1.Controls.Add(this.ckCat);
             this.panel1.Controls.Add(this.ckFlash);
@@ -240,6 +244,19 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(284, 132);
             this.panel1.TabIndex = 15;
+            this.panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
+            // 
+            // ckShowBeta
+            // 
+            this.ckShowBeta.AutoSize = true;
+            this.ckShowBeta.Location = new System.Drawing.Point(148, 108);
+            this.ckShowBeta.Name = "ckShowBeta";
+            this.ckShowBeta.Size = new System.Drawing.Size(120, 17);
+            this.ckShowBeta.TabIndex = 11;
+            this.ckShowBeta.Text = "Show Beta versions";
+            this.toolTip1.SetToolTip(this.ckShowBeta, "Show beta versions of firmware in Firmware selector");
+            this.ckShowBeta.UseVisualStyleBackColor = true;
+            this.ckShowBeta.CheckedChanged += new System.EventHandler(this.ckShowBeta_CheckedChanged);
             // 
             // chkVideos
             // 
@@ -249,6 +266,7 @@
             this.chkVideos.Size = new System.Drawing.Size(58, 17);
             this.chkVideos.TabIndex = 10;
             this.chkVideos.Text = "Videos";
+            this.toolTip1.SetToolTip(this.chkVideos, "Upload Videos to the Gemini");
             this.chkVideos.UseVisualStyleBackColor = true;
             // 
             // ckCat
@@ -259,6 +277,7 @@
             this.ckCat.Size = new System.Drawing.Size(67, 17);
             this.ckCat.TabIndex = 9;
             this.ckCat.Text = "Catalogs";
+            this.toolTip1.SetToolTip(this.ckCat, "Update Catalogs");
             this.ckCat.UseVisualStyleBackColor = true;
             // 
             // ckFlash
@@ -269,6 +288,7 @@
             this.ckFlash.Size = new System.Drawing.Size(96, 17);
             this.ckFlash.TabIndex = 8;
             this.ckFlash.Text = "Flash Firmware";
+            this.toolTip1.SetToolTip(this.ckFlash, "Flash Gemini Firmware");
             this.ckFlash.UseVisualStyleBackColor = true;
             // 
             // ckHC
@@ -279,6 +299,7 @@
             this.ckHC.Size = new System.Drawing.Size(41, 17);
             this.ckHC.TabIndex = 7;
             this.ckHC.Text = "HC";
+            this.toolTip1.SetToolTip(this.ckHC, "Update Gemini Hand Controller");
             this.ckHC.UseVisualStyleBackColor = true;
             // 
             // ckGemini
@@ -289,6 +310,7 @@
             this.ckGemini.Size = new System.Drawing.Size(58, 17);
             this.ckGemini.TabIndex = 6;
             this.ckGemini.Text = "Gemini";
+            this.toolTip1.SetToolTip(this.ckGemini, "Uplate Gemini HTML files");
             this.ckGemini.UseVisualStyleBackColor = true;
             // 
             // txtPwd
@@ -297,6 +319,7 @@
             this.txtPwd.Name = "txtPwd";
             this.txtPwd.Size = new System.Drawing.Size(165, 20);
             this.txtPwd.TabIndex = 5;
+            this.toolTip1.SetToolTip(this.txtPwd, "Gemini login password");
             // 
             // label3
             // 
@@ -314,6 +337,7 @@
             this.txtUser.Size = new System.Drawing.Size(165, 20);
             this.txtUser.TabIndex = 3;
             this.txtUser.Text = "admin";
+            this.toolTip1.SetToolTip(this.txtUser, "Gemini login user ID");
             // 
             // label2
             // 
@@ -331,6 +355,7 @@
             this.txtIP.Size = new System.Drawing.Size(165, 20);
             this.txtIP.TabIndex = 1;
             this.txtIP.Text = "192.168.0.111";
+            this.toolTip1.SetToolTip(this.txtIP, "Gemini IP address");
             // 
             // label1
             // 
@@ -348,7 +373,7 @@
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(196, 13);
             this.label4.TabIndex = 16;
-            this.label4.Text = "Copyright (c) 2014-23 by Paul Kanevsky";
+            this.label4.Text = "Copyright (c) 2014-24 by Paul Kanevsky";
             // 
             // cbZip
             // 
@@ -406,6 +431,7 @@
             this.button2.Size = new System.Drawing.Size(145, 23);
             this.button2.TabIndex = 23;
             this.button2.Text = "Format SD Card!";
+            this.toolTip1.SetToolTip(this.button2, "Format Gemini SD card -- THIS WILL ERASE ALL FILES!");
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
@@ -452,6 +478,29 @@
             this.tabPage1.Size = new System.Drawing.Size(606, 212);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Automatic";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(153, 18);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(115, 16);
+            this.label5.TabIndex = 21;
+            this.label5.Text = "Firmware Version:";
+            // 
+            // cbVersion
+            // 
+            this.cbVersion.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbVersion.FormattingEnabled = true;
+            this.cbVersion.Items.AddRange(new object[] {
+            "Gemini L6",
+            "Gemini L5"});
+            this.cbVersion.Location = new System.Drawing.Point(274, 14);
+            this.cbVersion.Name = "cbVersion";
+            this.cbVersion.Size = new System.Drawing.Size(181, 24);
+            this.cbVersion.TabIndex = 20;
+            this.toolTip1.SetToolTip(this.cbVersion, "Select firmware to update");
+            this.cbVersion.SelectedIndexChanged += new System.EventHandler(this.cbVersion_SelectedIndexChanged);
             // 
             // tabPage2
             // 
@@ -561,28 +610,6 @@
             this.lbGeminiDD.DragDrop += new System.Windows.Forms.DragEventHandler(this.lbGeminiDD_DragDrop);
             this.lbGeminiDD.DragOver += new System.Windows.Forms.DragEventHandler(this.lbGeminiDD_DragOver);
             // 
-            // cbVersion
-            // 
-            this.cbVersion.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbVersion.FormattingEnabled = true;
-            this.cbVersion.Items.AddRange(new object[] {
-            "Gemini L6",
-            "Gemini L5"});
-            this.cbVersion.Location = new System.Drawing.Point(274, 14);
-            this.cbVersion.Name = "cbVersion";
-            this.cbVersion.Size = new System.Drawing.Size(181, 24);
-            this.cbVersion.TabIndex = 20;
-            this.cbVersion.SelectedIndexChanged += new System.EventHandler(this.cbVersion_SelectedIndexChanged);
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(153, 18);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(115, 16);
-            this.label5.TabIndex = 21;
-            this.label5.Text = "Firmware Version:";
-            // 
             // GFUForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -671,6 +698,8 @@
         private System.Windows.Forms.Button pbClearGemini;
         private System.Windows.Forms.ComboBox cbVersion;
         private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.CheckBox ckShowBeta;
+        private System.Windows.Forms.ToolTip toolTip1;
     }
 }
 

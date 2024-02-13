@@ -28,6 +28,9 @@ namespace GFU
 
         private string previousDateTime = "(unknown)";
 
+        Dictionary<string, string> versions = null;
+
+
         private string[] http_links = new string[]
         {
 
@@ -94,7 +97,7 @@ namespace GFU
                 txtPwd.Text = Properties.Settings.Default.Password;
                 txtUser.Text = Properties.Settings.Default.UserName;
             }
-
+    
 
             try
             {
@@ -122,8 +125,9 @@ namespace GFU
             lblVer.Text = "v" + Application.ProductVersion;
 
             tmTimer.Tick += new EventHandler(tmTimer_Tick);
-            tmTimer.Interval = 500;
-            cbVersion.SelectedIndex = 0;
+            tmTimer.Interval = 100;
+            tmTimer.Start();
+
         }
 
         internal void Stop()
@@ -143,7 +147,32 @@ namespace GFU
         private void tmTimer_Tick(object sender, EventArgs e)
         {
             tmTimer.Stop();
-            button1_Click(this, null);
+
+
+#if DEBUG
+            versions = frmFirmware.populateVersions("https://gemini-2.net/firmware-changes.html", ckShowBeta.Checked);
+#else
+            versions = frmFirmware.populateVersions("https://gemini-2.com/firmware-changes.html", ckShowBeta.Checked);
+#endif
+            if (versions != null && versions.Keys.Count > 0)
+            {
+                cbVersion.Items.Clear();
+                cbVersion.Items.AddRange(versions.Select(x => x.Key).ToArray());
+            }
+            else
+                versions = new Dictionary<string, string>()
+                {
+                    { "Level 6.00" , "http://losmandy.com/files/gemini/firmware/combined.zip"},
+                    { "Level 5.21" , "http://losmandy.com/files/gemini/firmware/combined5.zip"}
+
+                };
+
+            cbVersion.Text = versions.Keys.First();
+            cbVersion.SelectedIndex = -1;
+            cbVersion.SelectedIndex = 0;
+
+
+            //            button1_Click(this, null);
         }
 
         private void SaveSettings()
@@ -216,7 +245,7 @@ namespace GFU
 
                 }
 
-                if (cbZip.Text == "" || cbZip.Text.StartsWith("http://")
+                if (cbZip.Text == "" || cbZip.Text.StartsWith("http://") || cbZip.Text.StartsWith("https://")
                     || !File.Exists(cbZip.Text))
                 {
                     if (cbZip.Text != "") downloadFile = cbZip.Text;
@@ -236,6 +265,10 @@ namespace GFU
                         var file = "download " + DateTime.Now.ToString("yyyy-MM-dd") + ".zip";
                         var fileName = Path.Combine(path, file);
                         System.IO.Directory.CreateDirectory(path);
+
+                        if (downloadFile.StartsWith("https://gemini-2.com"))
+                            downloadFile = downloadFile.Replace("https://gemini-2.com", "https://github.com/PKAstro/Gemini-2/raw/master");
+
                         using (client = new MyWebClient())
                         {
                             client.Timeout = 5000;
@@ -511,25 +544,19 @@ namespace GFU
                 if (Directory.Exists(Path.Combine(path, "combined")))
                     path = Path.Combine(path, "combined");
 
-                if (!ckHC.Checked && !ckCat.Checked)
-                {
-                    try
+                if (!ckHC.Checked)
+                { 
+                    if (!ckCat.Checked)
                     {
-                        FileSystemInfo inf = new DirectoryInfo(path + @"\HCFirmware");
-                        inf.DeleteReadOnly();
-                    }
-                    catch { }
+                        try
+                        {
+                            FileSystemInfo inf = new DirectoryInfo(path + @"\HCFirmware");
+                            inf.DeleteReadOnly();
+                        }
+                        catch { }
+                    }                   
                 }
-                else if (!ckHC.Checked) // delete firmware only, keep the other files (catalogs)
-                {
-                    try
-                    {
-                        FileSystemInfo inf = new DirectoryInfo(path + @"\HCFirmware");
-                        inf.DeleteReadOnly();
-                    }
-                    catch { }
-                }
-               
+                               
                 if (!ckCat.Checked)
                 {
                     try
@@ -728,7 +755,7 @@ namespace GFU
 //                        Gemini_Reboot(); //reboot just in case
 
                      
-                        DateTime dt = File.GetCreationTime(ff);
+                        DateTime dt = File.GetLastWriteTime(ff);
                         string fn = Path.GetFileName(ff);
 
                         Status("Ready to flash");
@@ -1383,7 +1410,7 @@ namespace GFU
             catch
             {
             }
-            return WaitForGemini("Reboot", 15000);
+            return WaitForGemini("Reboot", 30000);
 
         }
 
@@ -1575,10 +1602,28 @@ namespace GFU
 
         private void cbVersion_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (cbVersion.Text.Contains("L6"))
-                cbZip.Text = "http://losmandy.com/files/gemini/firmware/combined.zip";
-            else if (cbVersion.Text.Contains("L5"))
-                cbZip.Text = "http://losmandy.com/files/gemini/firmware/combined5.zip";
+
+            if (!versions.ContainsKey(cbVersion.Text)) return;
+
+            var url = versions[cbVersion.Text];
+
+            cbZip.Text = url;
+        }
+
+        private void ckShowBeta_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ckShowBeta.Checked)
+            {
+                var res = MessageBox.Show("Warning: beta firmware versions are unreleased and untested. Update at your own risk!",
+                     "GFU", MessageBoxButtons.OKCancel, MessageBoxIcon.Exclamation);
+
+                if (res == DialogResult.Cancel) return;
+            }
+            tmTimer.Start();
+        }
+
+        private void panel1_Paint(object sender, PaintEventArgs e)
+        {
 
         }
     }
