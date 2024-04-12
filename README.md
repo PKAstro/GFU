@@ -3,7 +3,7 @@ GFU
 
 Gemini Firmware Updater
 
-v1.0.0.20 by Paul Kanevsky
+v1.0.0.32 by Paul Kanevsky
 
 This program will:
 
