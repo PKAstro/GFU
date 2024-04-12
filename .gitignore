@@ -91,3 +91,6 @@ packages/Ionic.Zip.1.9.1.8/Ionic.Zip.1.9.1.8.nupkg
 packages/Ionic.Zip.1.9.1.8/lib/Ionic.Zip.dll
 packages/Ionic.Zip.1.9.1.8/nuget.bat
 GFUSetup/GFUSetup/Express/
+/packages/Newtonsoft.Json.13.0.3
+/GFU/bin
+/GFU/obj

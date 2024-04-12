@@ -1410,7 +1410,7 @@ namespace GFU
             catch
             {
             }
-            return WaitForGemini("Reboot", 30000);
+            return WaitForGemini("Reboot", 60000);
 
         }
 
@@ -1436,22 +1436,30 @@ namespace GFU
             {
 
             }
-            return WaitForGemini("Flash Firmware", 30000);
+            return WaitForGemini("Flash Firmware", 60000);
         }
 
         private bool WaitForGemini(string msg, int timeout = 5000)
         {
-            try
+            DateTime t = DateTime.Now + TimeSpan.FromMilliseconds(timeout);
+
+            for (;;)
             {
-                string res = GET("firmware.cgi", "", timeout);
-                return true;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(this,
-                    "Timeout occurred while waiting for Gemini to " + msg ,
-                    "Failed to " + msg, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return false;
+                try
+                {
+                    string res = GET("firmware.cgi", "", 5000);
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    if (DateTime.Now >= t)
+                    {
+                        MessageBox.Show(this,
+                            "Timeout occurred while waiting for Gemini to " + msg,
+                            "Failed to " + msg, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return false;
+                    }
+                }
             }
         }
 
